@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-deep: #081c18;
+    --bg-surface: #0b2721;
+    --bg-surface-elevated: #11362e;
+    --border-subtle: rgba(95, 222, 231, 0.15);
+    --border-accent: #5fdee7;
+    --accent-emerald: #10b981;
+  }
+
+  body {
+    background-color: #081c18;
+    color: #e2e8f0;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: 'Outfit', sans-serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Ticker marquee animation */
+@keyframes ticker-slide {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-ticker {
+  display: flex;
+  width: max-content;
+  animation: ticker-slide 38s linear infinite;
+}
+
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+
+/* Subtle tech grid background */
+.tech-grid-pattern {
+  background-image: radial-gradient(rgba(95, 222, 231, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.tech-grid-dense {
+  background-image: 
+    linear-gradient(to right, rgba(95, 222, 231, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(95, 222, 231, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #081c18;
+}
+::-webkit-scrollbar-thumb {
+  background: #15453b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #5fdee7;
+}

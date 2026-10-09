@@ -1,0 +1,6 @@
+{
+  "name": "TechAPark - Engineering Journal",
+  "description": "TechAPark: Independent journal of digital technology, security, cloud systems, and modern tech culture. Published daily with in-depth technical investigations, security best practices, and infrastructure guides.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
