@@ -1,0 +1,6 @@
+# TechAPark Official ads.txt
+# Authorized Digital Sellers (IAB Tech Lab standard)
+# Domain: techapark.com
+# Contact: sagheerofficial21dnb@gmail.com
+
+google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0

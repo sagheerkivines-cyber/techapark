@@ -1,0 +1,17 @@
+# TechAPark robots.txt
+User-agent: *
+Allow: /
+Allow: /ads.txt
+
+# Google AdSense Crawler
+User-agent: Mediapartners-Google
+Allow: /
+Allow: /ads.txt
+
+# Google AdSense AdsBot
+User-agent: AdsBot-Google
+Allow: /
+Allow: /ads.txt
+
+# Sitemaps
+Sitemap: https://techapark.com/sitemap.xml
