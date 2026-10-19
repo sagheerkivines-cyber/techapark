@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Search, Bookmark, Menu, X, Cpu, Sparkles } from 'lucide-react';
+import { Search, Bookmark, Menu, X, Sparkles } from 'lucide-react';
 import { TechCategory } from '../types/blog';
+import { TechLogoFull } from './Logo';
 
 interface HeaderProps {
   currentCategory: TechCategory | 'All';
@@ -45,21 +46,17 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-8 h-16">
           
-          {/* Zone 1: Brand wordmark */}
+          {/* Zone 1: Brand wordmark with new custom tech logo */}
           <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={() => {
                 onNavigateTab('feed');
                 onSelectCategory('All');
               }}
-              className="group flex items-center gap-2.5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5fdee7]"
+              className="group flex items-center text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5fdee7] rounded-lg"
+              aria-label="TechAPark Home"
             >
-              <div className="w-9 h-9 rounded-lg bg-[#0b2721] border border-[#5fdee7]/40 flex items-center justify-center text-[#5fdee7] shadow-[0_0_12px_rgba(95,222,231,0.2)] group-hover:border-[#5fdee7] group-hover:scale-105 transition-all">
-                <Cpu className="w-5 h-5 text-[#5fdee7]" />
-              </div>
-              <span className="text-xl font-bold tracking-tight text-white whitespace-nowrap font-display group-hover:text-[#5fdee7] transition-colors">
-                TechAPark
-              </span>
+              <TechLogoFull size="md" />
             </button>
           </div>
 

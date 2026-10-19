@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#071916" />
+      <stop offset="50%" stop-color="#0b2721" />
+      <stop offset="100%" stop-color="#04100e" />
+    </linearGradient>
+
+    <!-- Neon Cyan to Emerald Gradient -->
+    <linearGradient id="neonGrad" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5fdee7" />
+      <stop offset="60%" stop-color="#22d3ee" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+
+    <!-- Accent Emerald Glow -->
+    <linearGradient id="emeraldGrad" x1="32" y1="12" x2="32" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Hexagonal / Shield Outer Container -->
+  <polygon points="32,4 56,18 56,46 32,60 8,46 8,18" fill="url(#bgGrad)" stroke="#5fdee7" stroke-width="2.5" stroke-linejoin="round" stroke-opacity="0.8" />
+  
+  <!-- Inner Circuit Grid Accent -->
+  <polygon points="32,8 52,20 52,44 32,56 12,44 12,20" fill="none" stroke="#10b981" stroke-width="0.8" stroke-opacity="0.25" stroke-dasharray="2 3" />
+
+  <!-- Monogram T + P + Tech Circuit Core -->
+  <g filter="url(#glow)">
+    <!-- Top Horizontal Cantilever of 'T' -->
+    <path d="M18 20 L46 20" stroke="url(#neonGrad)" stroke-width="4" stroke-linecap="round" />
+    
+    <!-- Left Angled Tech Accent on T-Bar -->
+    <path d="M18 20 L22 15" stroke="#5fdee7" stroke-width="2.5" stroke-linecap="round" />
+    <path d="M46 20 L42 25" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" />
+
+    <!-- Central Vertical Stem of T & P -->
+    <path d="M32 20 L32 48" stroke="url(#neonGrad)" stroke-width="4" stroke-linecap="round" />
+
+    <!-- P-Loop: Bridges from Central Stem to Right and loops back to center -->
+    <path d="M32 23 C42 23 45 27 45 33 C45 39 41 41 32 41" fill="none" stroke="url(#neonGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- Quantum Tech Core Node at Center Intersection -->
+    <circle cx="32" cy="32" r="2.8" fill="#5fdee7" />
+    <circle cx="32" cy="32" r="1.2" fill="#ffffff" />
+
+    <!-- Secondary Tech Nodes / Data Beacons -->
+    <circle cx="45" cy="33" r="2" fill="#10b981" />
+    <circle cx="32" cy="48" r="2.2" fill="#5fdee7" />
+    <circle cx="18" cy="20" r="1.8" fill="#5fdee7" />
+  </g>
+</svg>

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { OFFICIAL_CONTACT } from '../data/editors';
 import { CATEGORIES_LIST } from '../data/categories';
 import { TechCategory } from '../types/blog';
-import { Cpu, Phone, Mail, MessageCircle, Shield, FileText, CheckCircle2 } from 'lucide-react';
+import { Phone, Mail, MessageCircle, Shield, FileText, CheckCircle2 } from 'lucide-react';
+import { TechLogoFull } from './Logo';
 
 interface FooterProps {
   onSelectCategory: (category: TechCategory) => void;
@@ -24,14 +25,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onNavigateTab 
           
           {/* Brand & Mission Column */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#0b2721] border border-[#5fdee7]/40 flex items-center justify-center text-[#5fdee7]">
-                <Cpu className="w-4 h-4 text-[#5fdee7]" />
-              </div>
-              <span className="text-xl font-bold font-display text-white tracking-tight">
-                TechAPark
-              </span>
-            </div>
+            <TechLogoFull size="md" showTagline={false} />
 
             <div className="text-xs font-mono text-[#5fdee7] tracking-wider uppercase">
               ENGINEERING JOURNAL — PUBLISHED DAILY
