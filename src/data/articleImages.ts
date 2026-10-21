@@ -3,6 +3,7 @@ import img1_1 from '../assets/images/data_privacy_infographic_1791555286138.jpg'
 import img1_2 from '../assets/images/cyber_security_tools_1791566201198.jpg';
 import img1_3 from '../assets/images/malware_protection_infographic_1791566216709.jpg';
 import img1_4 from '../assets/images/secure_transactions_infographic_1791566233665.jpg';
+import img1_5 from '../assets/images/two_factor_auth_infographic_1792586805495.jpg';
 
 import img2_1 from '../assets/images/cloud_storage_infographic_1791555298129.jpg';
 import img2_2 from '../assets/images/web_hosting_infographic_1791566250782.jpg';
@@ -29,6 +30,7 @@ export const ARTICLE_IMAGES: Record<string, string> = {
   'cyber-security-tools': img1_2,
   'malware-protection-guides': img1_3,
   'secure-online-transactions': img1_4,
+  'two-factor-authentication': img1_5,
 
   'cloud-storage-solutions': img2_1,
   'best-web-hosting-providers': img2_2,

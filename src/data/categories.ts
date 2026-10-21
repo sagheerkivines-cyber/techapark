@@ -22,7 +22,7 @@ export const CATEGORIES_LIST: CategoryMeta[] = [
     accentColor: '#5fdee7',
     badgeColor: 'border-[#5fdee7]/40 text-[#5fdee7]',
     icon: 'ShieldCheck',
-    articleCount: 4
+    articleCount: 5
   },
   {
     id: 'Cloud Computing & Hosting',
