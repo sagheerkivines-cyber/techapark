@@ -11,8 +11,7 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onNavigateTab }) => {
-  const [activePolicyModal, setActivePolicyModal] = useState<'privacy' | 'terms' | 'standards' | 'adstxt' | null>(null);
-  const [copiedAdsTxt, setCopiedAdsTxt] = useState(false);
+  const [activePolicyModal, setActivePolicyModal] = useState<'privacy' | 'terms' | 'standards' | null>(null);
 
   return (
     <footer className="bg-[#051310] border-t border-[#5fdee7]/25 text-slate-300 font-sans relative">
@@ -168,24 +167,6 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onNavigateTab 
                 </button>
               </li>
               <li>
-                <button
-                  onClick={() => setActivePolicyModal('adstxt')}
-                  className="hover:text-[#5fdee7] transition-colors text-left"
-                >
-                  Authorized Sellers (ads.txt)
-                </button>
-              </li>
-              <li>
-                <a
-                  href="/ads.txt"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-slate-300 hover:text-[#5fdee7] transition-colors flex items-center gap-1 font-mono text-[11px]"
-                >
-                  <span>Raw /ads.txt Endpoint ↗</span>
-                </a>
-              </li>
-              <li>
                 <a
                   href={`mailto:${OFFICIAL_CONTACT.email}?subject=Security Vulnerability Disclosure`}
                   className="text-slate-300 hover:text-[#5fdee7] transition-colors"
@@ -221,7 +202,6 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onNavigateTab 
                 {activePolicyModal === 'standards' && 'TechAPark Editorial Standards'}
                 {activePolicyModal === 'privacy' && 'TechAPark Privacy Policy (2026)'}
                 {activePolicyModal === 'terms' && 'TechAPark Terms & Conditions'}
-                {activePolicyModal === 'adstxt' && 'Authorized Digital Sellers (ads.txt)'}
               </h3>
               <button
                 onClick={() => setActivePolicyModal(null)}
@@ -232,41 +212,6 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onNavigateTab 
             </div>
 
             <div className="text-xs text-slate-300 space-y-3 leading-relaxed font-sans">
-              {activePolicyModal === 'adstxt' && (
-                <>
-                  <p>In compliance with IAB Tech Lab standards, TechAPark publishes an Authorized Digital Sellers (<code>ads.txt</code>) file at the root of our web server to prevent fraudulent ad inventory.</p>
-                  
-                  <div className="p-3.5 rounded-xl bg-[#061512] border border-[#5fdee7]/25 font-mono text-[11px] text-[#5fdee7] space-y-1 select-all">
-                    <p className="text-slate-400"># TechAPark Official ads.txt</p>
-                    <p className="text-slate-400"># Domain: techapark.com</p>
-                    <p className="text-white font-bold">google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0</p>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-3 pt-2">
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText('google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0');
-                        setCopiedAdsTxt(true);
-                        setTimeout(() => setCopiedAdsTxt(false), 2000);
-                      }}
-                      className="px-3 py-1.5 rounded-lg bg-[#0b2721] border border-[#5fdee7]/40 text-[#5fdee7] hover:bg-[#5fdee7] hover:text-[#081c18] font-mono text-xs font-semibold transition-colors"
-                    >
-                      {copiedAdsTxt ? '✓ Copied to Clipboard' : 'Copy ads.txt Record'}
-                    </button>
-                    <a
-                      href="/ads.txt"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-1.5 rounded-lg bg-[#10b981] text-[#081c18] font-mono text-xs font-bold hover:bg-[#0ea372] transition-colors"
-                    >
-                      Open Raw /ads.txt ↗
-                    </a>
-                  </div>
-                  <p className="text-[11px] text-slate-400 font-mono">
-                    File Location: <code>/public/ads.txt</code> (Served directly at <code>https://techapark.com/ads.txt</code> upon GitHub Sync and build).
-                  </p>
-                </>
-              )}
 
               {activePolicyModal === 'standards' && (
                 <>

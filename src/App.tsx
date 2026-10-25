@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Header } from './components/Header';
 import { TickerTape } from './components/TickerTape';
 import { MetricsBar } from './components/MetricsBar';
@@ -10,7 +10,7 @@ import { AboutSection } from './components/AboutSection';
 import { EditorsSection } from './components/EditorsSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
-import { ALL_ARTICLES, FEATURED_ARTICLES, TRENDING_ARTICLES, getRelatedArticles } from './data/articles';
+import { ALL_ARTICLES, FEATURED_ARTICLES, TRENDING_ARTICLES, getRelatedArticles, getArticleBySlug } from './data/articles';
 import { CATEGORIES_LIST } from './data/categories';
 import { Article, TechCategory } from './types/blog';
 import { 
@@ -60,6 +60,73 @@ export default function App() {
       localStorage.removeItem('techapark_bookmarks');
     } catch {}
   };
+
+  const openArticle = (article: Article) => {
+    setActiveArticle(article);
+    try {
+      window.history.pushState({ articleId: article.id }, '', `/articles/${article.slug}`);
+      document.title = `${article.title} | TechAPark Engineering Journal`;
+    } catch {}
+  };
+
+  const closeArticle = () => {
+    setActiveArticle(null);
+    try {
+      window.history.pushState({}, '', '/');
+      document.title = 'TechAPark | Engineering Journal - Published Daily';
+    } catch {}
+  };
+
+  // Deep-linking & URL routing handler for sitemap & direct links
+  useEffect(() => {
+    const handleUrlNavigation = () => {
+      const path = window.location.pathname;
+      const searchParams = new URLSearchParams(window.location.search);
+      const hash = window.location.hash.replace(/^#\/?/, '');
+
+      // 1. Article direct link: /articles/:slug or ?article=:slug or #articles/:slug or #:slug
+      let targetSlug = searchParams.get('article');
+      if (!targetSlug && path.startsWith('/articles/')) {
+        targetSlug = path.replace(/^\/articles\//, '').replace(/\/$/, '');
+      } else if (!targetSlug && (hash.startsWith('articles/') || hash)) {
+        targetSlug = hash.replace(/^articles\//, '');
+      }
+
+      if (targetSlug) {
+        const found = getArticleBySlug(targetSlug);
+        if (found) {
+          setActiveArticle(found);
+          document.title = `${found.title} | TechAPark Engineering Journal`;
+          return;
+        }
+      }
+
+      // 2. Category direct link: /category/:slug or ?category=:slug
+      let catSlug = searchParams.get('category');
+      if (!catSlug && path.startsWith('/category/')) {
+        catSlug = path.replace(/^\/category\//, '').replace(/\/$/, '');
+      }
+      if (catSlug) {
+        const catObj = CATEGORIES_LIST.find(c => c.slug === catSlug);
+        if (catObj) {
+          setSelectedCategory(catObj.id);
+          setActiveTab('feed');
+          document.title = `${catObj.shortTitle} | TechAPark Engineering Journal`;
+          return;
+        }
+      }
+
+      // 3. Tab navigation: /about, /editors, /contact, /feed
+      if (path === '/about' || hash === 'about') setActiveTab('about');
+      else if (path === '/editors' || hash === 'editors') setActiveTab('editors');
+      else if (path === '/contact' || hash === 'contact') setActiveTab('contact');
+      else if (path === '/feed' || hash === 'feed') setActiveTab('feed');
+    };
+
+    handleUrlNavigation();
+    window.addEventListener('popstate', handleUrlNavigation);
+    return () => window.removeEventListener('popstate', handleUrlNavigation);
+  }, []);
 
   // Filtered articles list based on selected category
   const filteredArticles = useMemo(() => {
@@ -151,7 +218,7 @@ export default function App() {
               {/* Dominant Hero Card */}
               {FEATURED_ARTICLES.length > 0 && (
                 <div 
-                  onClick={() => setActiveArticle(FEATURED_ARTICLES[0])}
+                  onClick={() => openArticle(FEATURED_ARTICLES[0])}
                   className="group relative cursor-pointer rounded-3xl bg-[#0b2721] border border-[#5fdee7]/35 hover:border-[#5fdee7] transition-all duration-300 shadow-[0_12px_45px_rgba(0,0,0,0.5)] hover:shadow-[0_0_40px_rgba(95,222,231,0.25)] overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-0"
                 >
                   {/* Left Column: Image with glow */}
@@ -237,7 +304,7 @@ export default function App() {
                   {TRENDING_ARTICLES.slice(0, 4).map((art) => (
                     <div
                       key={art.id}
-                      onClick={() => setActiveArticle(art)}
+                      onClick={() => openArticle(art)}
                       className="group cursor-pointer rounded-xl bg-[#0b2721] border border-[#5fdee7]/20 hover:border-[#5fdee7] hover:bg-[#0e332b] transition-all flex flex-col justify-between overflow-hidden"
                     >
                       {art.imageUrl && (
@@ -325,7 +392,7 @@ export default function App() {
                 <ArticleCard
                   key={article.id}
                   article={article}
-                  onOpenArticle={(art) => setActiveArticle(art)}
+                  onOpenArticle={(art) => openArticle(art)}
                   isBookmarked={bookmarkedIds.includes(article.id)}
                   onToggleBookmark={toggleBookmark}
                   layoutVariant={idx === 0 && currentPage === 1 && selectedCategory !== 'All' ? 'featured' : 'standard'}
@@ -408,10 +475,10 @@ export default function App() {
       {/* 8. Full Interactive Article Reader Modal */}
       <ArticleReaderModal
         article={activeArticle}
-        onClose={() => setActiveArticle(null)}
+        onClose={closeArticle}
         isBookmarked={activeArticle ? bookmarkedIds.includes(activeArticle.id) : false}
         onToggleBookmark={toggleBookmark}
-        onSelectRelatedArticle={(art) => setActiveArticle(art)}
+        onSelectRelatedArticle={(art) => openArticle(art)}
         relatedArticles={relatedArticles}
       />
 
@@ -419,7 +486,10 @@ export default function App() {
       <SearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
-        onSelectArticle={(art) => setActiveArticle(art)}
+        onSelectArticle={(art) => {
+          setIsSearchOpen(false);
+          openArticle(art);
+        }}
       />
 
       {/* 10. Bookmarks / Saved Modal */}
@@ -427,7 +497,10 @@ export default function App() {
         isOpen={isBookmarksOpen}
         onClose={() => setIsBookmarksOpen(false)}
         bookmarkedIds={bookmarkedIds}
-        onSelectArticle={(art) => setActiveArticle(art)}
+        onSelectArticle={(art) => {
+          setIsBookmarksOpen(false);
+          openArticle(art);
+        }}
         onRemoveBookmark={toggleBookmark}
         onClearAll={clearAllBookmarks}
       />
