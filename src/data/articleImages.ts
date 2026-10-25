@@ -19,6 +19,7 @@ import img4_1 from '../assets/images/gaming_laptops_infographic_1791555325547.jp
 import img4_2 from '../assets/images/pc_accessories_infographic_1791566344713.jpg';
 import img4_3 from '../assets/images/mobile_gaming_infographic_1791566357906.jpg';
 import img4_4 from '../assets/images/vr_headsets_infographic_1791566373054.jpg';
+import img4_5 from '../assets/images/cloud_gaming_infographic_1792816374348.jpg';
 
 import img5_1 from '../assets/images/windows_shortcuts_infographic_1791555335389.jpg';
 import img5_2 from '../assets/images/battery_saving_infographic_1791566387279.jpg';
@@ -46,6 +47,7 @@ export const ARTICLE_IMAGES: Record<string, string> = {
   'pc-gaming-accessories': img4_2,
   'mobile-gaming-trends': img4_3,
   'virtual-reality-headsets': img4_4,
+  'cloud-gaming': img4_5,
 
   'windows-shortcut-tricks': img5_1,
   'mobile-battery-saving-tips': img5_2,

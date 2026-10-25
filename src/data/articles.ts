@@ -71,7 +71,7 @@ export const TICKER_ITEMS = [
 ];
 
 export const METRICS_DATA = [
-  { label: 'Published Engineering Investigations', value: '21', suffix: '', change: '+100% Peer-Reviewed' },
+  { label: 'Published Engineering Investigations', value: '22', suffix: '', change: '+100% Peer-Reviewed' },
   { label: 'Original Lab Research Reports', value: '84', suffix: 'k', change: '+28.4% Monthly Readership' },
   { label: 'Verified Global Tech Readers', value: '142', suffix: 'k+', change: 'Over 120 Countries' },
   { label: 'Editorial Citations & Backlinks', value: '3,850', suffix: '', change: '99.98% Verification Score' }

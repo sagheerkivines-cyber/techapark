@@ -32,9 +32,9 @@ export const TechLogoIcon: React.FC<{ size?: 'sm' | 'md' | 'lg'; className?: str
       >
         <defs>
           <linearGradient id="logoNeon" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#5fdee7" />
-            <stop offset="50%" stop-color="#22d3ee" />
-            <stop offset="100%" stop-color="#10b981" />
+            <stop offset="0%" stopColor="#5fdee7" />
+            <stop offset="50%" stopColor="#22d3ee" />
+            <stop offset="100%" stopColor="#10b981" />
           </linearGradient>
 
           <filter id="logoGlow" x="-20%" y="-20%" width="140%" height="140%">

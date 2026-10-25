@@ -648,12 +648,6 @@ export const CATEGORY_1_ARTICLES: Article[] = [
           'By combining client-side tokenization, virtual card isolation, biometric 3DS2 attestation, and real-time transaction telemetry, users and engineers create a resilient financial fortress. In modern commerce, security is not about hoping vendors never suffer breaches—it is about ensuring that when a vendor does breach, the compromised data contains zero exploitable value.'
         ]
       }
-    ],
-    keyTakeaways: [
-      'Client-side tokenization eliminates server-side exposure of primary account numbers (PAN).',
-      'Virtual credit cards with merchant-locking restrict compromised card exposure to a single vendor.',
-      'Strict Content Security Policies (CSP) and Subresource Integrity (SRI) neutralize Magecart browser skimming.',
-      '3D Secure 2.0 biometric challenge-response obsoletes easily spoofed SMS OTP verification codes.'
     ]
   },
   {
