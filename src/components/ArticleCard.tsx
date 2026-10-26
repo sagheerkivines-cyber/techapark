@@ -17,17 +17,17 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   onToggleBookmark,
   layoutVariant = 'standard'
 }) => {
-  const isFeatured = layoutVariant === 'featured' || (article.featured && layoutVariant !== 'compact');
+  const isFeatured = layoutVariant === 'featured';
 
   return (
     <article
       onClick={() => onOpenArticle(article)}
-      className={`group relative cursor-pointer rounded-2xl bg-[#0b2721] border border-[#5fdee7]/20 hover:border-[#5fdee7] transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.35)] hover:shadow-[0_0_30px_rgba(95,222,231,0.2)] hover:-translate-y-1 overflow-hidden flex flex-col justify-between ${
-        isFeatured ? 'md:col-span-2 lg:col-span-2' : ''
+      className={`group relative cursor-pointer rounded-2xl bg-[#07251e] border border-[#10b981]/25 hover:border-[#34d399] transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.35)] hover:shadow-[0_0_25px_rgba(16,185,129,0.25)] hover:-translate-y-1 overflow-hidden flex flex-col justify-between h-full ${
+        isFeatured ? 'md:col-span-2 lg:col-span-2' : 'col-span-1'
       }`}
     >
-      {/* Visual Thumbnail Area */}
-      <div className={`relative w-full overflow-hidden bg-[#061512] ${isFeatured ? 'h-64 sm:h-80' : 'h-48 sm:h-52'}`}>
+      {/* Visual Thumbnail Area - Uniform equal height */}
+      <div className={`relative w-full overflow-hidden bg-[#041a15] shrink-0 ${isFeatured ? 'h-64' : 'h-48'}`}>
         {article.imageUrl ? (
           <img
             src={article.imageUrl}
@@ -62,15 +62,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           aria-label={isBookmarked ? 'Remove from bookmarks' : 'Save to bookmarks'}
           className={`absolute top-3.5 right-3.5 p-2 rounded-lg backdrop-blur-md transition-all ${
             isBookmarked
-              ? 'bg-[#5fdee7] text-[#081c18] shadow-[0_0_12px_rgba(95,222,231,0.5)]'
-              : 'bg-[#081c18]/80 text-slate-300 hover:text-[#5fdee7] hover:bg-[#081c18] border border-[#5fdee7]/25'
+              ? 'bg-[#10b981] text-[#021812] shadow-[0_0_12px_rgba(16,185,129,0.5)]'
+              : 'bg-[#041a15]/80 text-slate-300 hover:text-[#34d399] hover:bg-[#07251e] border border-[#10b981]/25'
           }`}
         >
           <Bookmark className="w-4 h-4 fill-current" />
         </button>
 
         {/* Article ID index tag in corner */}
-        <div className="absolute top-3.5 left-3.5 px-2.5 py-1 rounded bg-[#081c18]/85 backdrop-blur-md border border-[#5fdee7]/30 text-[11px] font-mono font-bold text-[#5fdee7]">
+        <div className="absolute top-3.5 left-3.5 px-2.5 py-1 rounded bg-[#041a15]/85 backdrop-blur-md border border-[#10b981]/30 text-[11px] font-mono font-bold text-emerald-300">
           ART {article.articleNumber}
         </div>
       </div>
@@ -80,7 +80,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         <div>
           {/* Zero-Pill Unboxed Metadata line with typographic separators */}
           <div className="flex items-center gap-2 text-xs font-mono text-slate-400 mb-2.5">
-            <span className="text-[#5fdee7] font-semibold">{article.category}</span>
+            <span className="text-[#34d399] font-semibold">{article.category}</span>
             <span aria-hidden="true">·</span>
             <span>{article.publishDate}</span>
             <span aria-hidden="true">·</span>
@@ -90,28 +90,26 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             </span>
           </div>
 
-          {/* Article Title with Hover Glow */}
-          <h3 className={`font-bold font-display tracking-tight text-white group-hover:text-[#5fdee7] transition-colors leading-snug ${
-            isFeatured ? 'text-xl sm:text-2xl mb-2' : 'text-lg mb-2'
-          }`}>
+          {/* Article Title with Hover Glow - Fixed 2-line rhythm for equal card heights */}
+          <h3 className="font-bold font-display tracking-tight text-white group-hover:text-[#34d399] transition-colors leading-snug text-lg mb-2 line-clamp-2 h-[3.25rem]">
             {article.title}
           </h3>
 
           {/* Subtitle / Deck */}
-          <p className="text-xs font-mono text-[#5fdee7]/80 mb-3 line-clamp-1">
+          <p className="text-xs font-mono text-emerald-400/80 mb-3 line-clamp-1">
             {article.subtitle}
           </p>
 
-          {/* Editorial Summary */}
-          <p className="text-sm text-slate-300 font-sans leading-relaxed line-clamp-3 mb-4">
+          {/* Editorial Summary - Fixed 3-line clamp for equal card heights */}
+          <p className="text-sm text-slate-300 font-sans leading-relaxed line-clamp-3 h-[4rem] mb-4">
             {article.summary}
           </p>
         </div>
 
         {/* Card Footer: Author + Interactive Arrow Glide */}
-        <div className="pt-4 border-t border-[#5fdee7]/15 flex items-center justify-between">
+        <div className="pt-4 border-t border-[#10b981]/20 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-full bg-[#081c18] border border-[#5fdee7]/40 flex items-center justify-center text-[10px] font-mono font-bold text-[#5fdee7]">
+            <div className="w-7 h-7 rounded-full bg-[#041a15] border border-[#10b981]/40 flex items-center justify-center text-[10px] font-mono font-bold text-[#34d399]">
               {article.author.avatar}
             </div>
             <div className="text-xs">
@@ -121,8 +119,8 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           </div>
 
           {/* Fluid arrow-glide translation on hover */}
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-[#5fdee7] group-hover:translate-x-1.5 transition-transform duration-200">
-            <span>Read Investigation</span>
+          <div className="flex items-center gap-1.5 text-xs font-bold text-[#34d399] group-hover:translate-x-1.5 transition-transform duration-200">
+            <span>Read Article</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </div>
         </div>
