@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { OFFICIAL_CONTACT } from '../data/editors';
 import { CATEGORIES_LIST } from '../data/categories';
 import { TechCategory } from '../types/blog';
-import { Phone, Mail, MessageCircle, Shield, FileText, CheckCircle2 } from 'lucide-react';
+import { Phone, Mail, MessageCircle, Shield, FileText, CheckCircle2, ArrowRight } from 'lucide-react';
 import { TechLogoFull } from './Logo';
+
+export type NavTab = 'feed' | 'about' | 'editors' | 'contact' | 'privacy' | 'terms' | 'editorial-standards';
 
 interface FooterProps {
   onSelectCategory: (category: TechCategory) => void;
-  onNavigateTab: (tab: 'feed' | 'about' | 'editors' | 'contact') => void;
+  onNavigateTab: (tab: NavTab) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onNavigateTab }) => {
-  const [activePolicyModal, setActivePolicyModal] = useState<'privacy' | 'terms' | 'standards' | null>(null);
-
   return (
     <footer className="bg-[#051310] border-t border-[#5fdee7]/25 text-slate-300 font-sans relative">
       
@@ -136,7 +136,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onNavigateTab 
             </ul>
           </div>
 
-          {/* Column 4: Editorial Standards & Policies */}
+          {/* Column 4: 5 Essential Mandatory Editorial & Legal Pages */}
           <div>
             <h4 className="text-xs font-mono font-bold text-[#5fdee7] uppercase tracking-wider mb-4">
               Editorial Policies
@@ -144,34 +144,54 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onNavigateTab 
             <ul className="space-y-2.5 text-xs text-slate-300">
               <li>
                 <button
-                  onClick={() => setActivePolicyModal('standards')}
-                  className="hover:text-[#5fdee7] transition-colors text-left"
+                  onClick={() => onNavigateTab('about')}
+                  className="hover:text-[#5fdee7] transition-colors text-left flex items-center gap-1.5"
                 >
-                  Editorial Standards & Peer Review
+                  <span>About Us</span>
+                  <span className="text-[10px] font-mono text-[#5fdee7] bg-[#5fdee7]/10 px-1.5 py-0.5 rounded">Core</span>
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => setActivePolicyModal('privacy')}
-                  className="hover:text-[#5fdee7] transition-colors text-left"
+                  onClick={() => onNavigateTab('contact')}
+                  className="hover:text-[#5fdee7] transition-colors text-left flex items-center gap-1.5"
                 >
-                  Privacy Policy (Zero-Tracking)
+                  <span>Contact Us</span>
+                  <span className="text-[10px] font-mono text-[#10b981] bg-[#10b981]/10 px-1.5 py-0.5 rounded">Desk</span>
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => setActivePolicyModal('terms')}
-                  className="hover:text-[#5fdee7] transition-colors text-left"
+                  onClick={() => onNavigateTab('privacy')}
+                  className="hover:text-[#5fdee7] transition-colors text-left flex items-center gap-1.5"
                 >
-                  Terms & Conditions of Service
+                  <span>Privacy Policy</span>
+                  <span className="text-[10px] font-mono text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">GDPR</span>
                 </button>
               </li>
               <li>
+                <button
+                  onClick={() => onNavigateTab('terms')}
+                  className="hover:text-[#5fdee7] transition-colors text-left flex items-center gap-1.5"
+                >
+                  <span>Terms & Conditions</span>
+                  <span className="text-[10px] font-mono text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">Legal</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigateTab('editorial-standards')}
+                  className="hover:text-[#5fdee7] transition-colors text-left flex items-center gap-1.5"
+                >
+                  <span>Editorial Standards & Peer Review</span>
+                </button>
+              </li>
+              <li className="pt-1 border-t border-[#5fdee7]/10">
                 <a
                   href={`mailto:${OFFICIAL_CONTACT.email}?subject=Security Vulnerability Disclosure`}
-                  className="text-slate-300 hover:text-[#5fdee7] transition-colors"
+                  className="text-slate-400 hover:text-[#5fdee7] transition-colors flex items-center gap-1 text-[11px]"
                 >
-                  Responsible Disclosure Program
+                  <span>Responsible Disclosure Program</span>
                 </a>
               </li>
             </ul>
@@ -192,63 +212,6 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onNavigateTab 
         </div>
 
       </div>
-
-      {/* Editorial Policy Modals */}
-      {activePolicyModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="w-full max-w-2xl bg-[#081c18] border border-[#5fdee7]/40 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4 max-h-[80vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-[#5fdee7]/20">
-              <h3 className="text-xl font-bold font-display text-white">
-                {activePolicyModal === 'standards' && 'TechAPark Editorial Standards'}
-                {activePolicyModal === 'privacy' && 'TechAPark Privacy Policy (2026)'}
-                {activePolicyModal === 'terms' && 'TechAPark Terms & Conditions'}
-              </h3>
-              <button
-                onClick={() => setActivePolicyModal(null)}
-                className="text-slate-400 hover:text-white p-1"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="text-xs text-slate-300 space-y-3 leading-relaxed font-sans">
-
-              {activePolicyModal === 'standards' && (
-                <>
-                  <p>TechAPark operates under strict journalistic independence. All technical benchmarks and security analyses are conducted in air-gapped lab environments with reproducible methodologies.</p>
-                  <p>We do not accept paid placement for product endorsements. Articles undergo dual-blind peer review by qualified systems engineers before appearing on the daily wire.</p>
-                  <p>Inquiries regarding methodology or corrections may be transmitted directly to Editor-in-Chief Sagheer Ahmad at <span className="font-mono text-[#5fdee7]">{OFFICIAL_CONTACT.email}</span>.</p>
-                </>
-              )}
-
-              {activePolicyModal === 'privacy' && (
-                <>
-                  <p>TechAPark practices data minimization by design. We do not deploy third-party behavioral trackers, cross-site identity beacons, or surveillance cookies.</p>
-                  <p>All reader bookmarks and preferences are stored locally in your browser’s isolated client storage and are never synchronized to external telemetry databases.</p>
-                  <p>Communications sent via our contact channels are encrypted in transit and purged in compliance with strict data protection frameworks.</p>
-                </>
-              )}
-
-              {activePolicyModal === 'terms' && (
-                <>
-                  <p>The code samples, terminal configurations, and architectural guides published on TechAPark are provided for educational and defensive security engineering purposes.</p>
-                  <p>Users are responsible for ensuring that security testing tools and penetration methods are deployed exclusively against authorized hardware and networks with explicit written consent.</p>
-                  <p>© 2026 TechAPark. Content may be referenced with proper attribution to TechAPark Engineering Journal.</p>
-                </>
-              )}
-            </div>
-
-            <div className="pt-4 border-t border-[#5fdee7]/15 flex justify-end">
-              <button
-                onClick={() => setActivePolicyModal(null)}
-                className="px-4 py-2 rounded-lg bg-[#5fdee7] text-[#081c18] font-bold text-xs font-mono"
-              >
-                Close Policy
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
     </footer>
   );

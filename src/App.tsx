@@ -9,7 +9,10 @@ import { BookmarksModal } from './components/BookmarksModal';
 import { AboutSection } from './components/AboutSection';
 import { EditorsSection } from './components/EditorsSection';
 import { ContactSection } from './components/ContactSection';
-import { Footer } from './components/Footer';
+import { PrivacyPolicySection } from './components/PrivacyPolicySection';
+import { TermsConditionsSection } from './components/TermsConditionsSection';
+import { EditorialPolicySection } from './components/EditorialPolicySection';
+import { Footer, NavTab } from './components/Footer';
 import { ALL_ARTICLES, FEATURED_ARTICLES, TRENDING_ARTICLES, getRelatedArticles, getArticleBySlug } from './data/articles';
 import { CATEGORIES_LIST } from './data/categories';
 import { Article, TechCategory } from './types/blog';
@@ -22,7 +25,7 @@ const ARTICLES_PER_PAGE = 8;
 
 export default function App() {
   // Navigation and filtering states
-  const [activeTab, setActiveTab] = useState<'feed' | 'about' | 'editors' | 'contact'>('feed');
+  const [activeTab, setActiveTab] = useState<NavTab>('feed');
   const [selectedCategory, setSelectedCategory] = useState<TechCategory | 'All'>('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [layoutMode, setLayoutMode] = useState<'grid' | 'magazine'>('grid');
@@ -72,8 +75,47 @@ export default function App() {
   const closeArticle = () => {
     setActiveArticle(null);
     try {
-      window.history.pushState({}, '', '/');
-      document.title = 'TechAPark | Engineering Journal - Published Daily';
+      const targetPath = activeTab === 'feed' ? '/' : `/${activeTab}`;
+      window.history.pushState({}, '', targetPath);
+      syncDocumentTitle(activeTab);
+    } catch {}
+  };
+
+  const syncDocumentTitle = (tab: NavTab) => {
+    switch (tab) {
+      case 'about':
+        document.title = 'About TechAPark | Engineering Journal & Laboratory';
+        break;
+      case 'contact':
+        document.title = 'Newsroom Hotlines & Contact Desks | TechAPark';
+        break;
+      case 'privacy':
+        document.title = 'Privacy Policy & Data Protection Charter | TechAPark';
+        break;
+      case 'terms':
+        document.title = 'Terms & Conditions of Service | TechAPark';
+        break;
+      case 'editorial-standards':
+        document.title = 'Editorial Standards & Peer Review Policy | TechAPark';
+        break;
+      case 'editors':
+        document.title = 'Board of Editors | TechAPark Engineering Journal';
+        break;
+      case 'feed':
+      default:
+        document.title = 'TechAPark | Engineering Journal - Published Daily';
+        break;
+    }
+  };
+
+  const handleNavigateTab = (tab: NavTab) => {
+    setActiveTab(tab);
+    setActiveArticle(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    try {
+      const targetPath = tab === 'feed' ? '/' : `/${tab}`;
+      window.history.pushState({ tab }, '', targetPath);
+      syncDocumentTitle(tab);
     } catch {}
   };
 
@@ -116,11 +158,29 @@ export default function App() {
         }
       }
 
-      // 3. Tab navigation: /about, /editors, /contact, /feed
-      if (path === '/about' || hash === 'about') setActiveTab('about');
-      else if (path === '/editors' || hash === 'editors') setActiveTab('editors');
-      else if (path === '/contact' || hash === 'contact') setActiveTab('contact');
-      else if (path === '/feed' || hash === 'feed') setActiveTab('feed');
+      // 3. Tab navigation: /about, /contact, /privacy, /terms, /editorial-standards, /editors, /feed
+      if (path === '/about' || hash === 'about') {
+        setActiveTab('about');
+        syncDocumentTitle('about');
+      } else if (path === '/contact' || hash === 'contact') {
+        setActiveTab('contact');
+        syncDocumentTitle('contact');
+      } else if (path === '/privacy' || hash === 'privacy') {
+        setActiveTab('privacy');
+        syncDocumentTitle('privacy');
+      } else if (path === '/terms' || hash === 'terms') {
+        setActiveTab('terms');
+        syncDocumentTitle('terms');
+      } else if (path === '/editorial-standards' || hash === 'editorial-standards') {
+        setActiveTab('editorial-standards');
+        syncDocumentTitle('editorial-standards');
+      } else if (path === '/editors' || hash === 'editors') {
+        setActiveTab('editors');
+        syncDocumentTitle('editors');
+      } else if (path === '/feed' || hash === 'feed') {
+        setActiveTab('feed');
+        syncDocumentTitle('feed');
+      }
     };
 
     handleUrlNavigation();
@@ -163,10 +223,7 @@ export default function App() {
         onOpenSearch={() => setIsSearchOpen(true)}
         onOpenBookmarks={() => setIsBookmarksOpen(true)}
         bookmarkCount={bookmarkedIds.length}
-        onNavigateTab={(tab) => {
-          setActiveTab(tab);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
+        onNavigateTab={handleNavigateTab}
         activeTab={activeTab}
       />
 
@@ -180,7 +237,7 @@ export default function App() {
       {/* Main View Router */}
       {activeTab === 'about' && (
         <main className="flex-1">
-          <AboutSection />
+          <AboutSection onNavigateTab={handleNavigateTab} />
         </main>
       )}
 
@@ -193,6 +250,33 @@ export default function App() {
       {activeTab === 'contact' && (
         <main className="flex-1">
           <ContactSection />
+        </main>
+      )}
+
+      {activeTab === 'privacy' && (
+        <main className="flex-1">
+          <PrivacyPolicySection 
+            onBackToFeed={() => handleNavigateTab('feed')} 
+            onNavigateTab={handleNavigateTab} 
+          />
+        </main>
+      )}
+
+      {activeTab === 'terms' && (
+        <main className="flex-1">
+          <TermsConditionsSection 
+            onBackToFeed={() => handleNavigateTab('feed')} 
+            onNavigateTab={handleNavigateTab} 
+          />
+        </main>
+      )}
+
+      {activeTab === 'editorial-standards' && (
+        <main className="flex-1">
+          <EditorialPolicySection 
+            onBackToFeed={() => handleNavigateTab('feed')} 
+            onNavigateTab={handleNavigateTab} 
+          />
         </main>
       )}
 
@@ -466,10 +550,7 @@ export default function App() {
       {/* 7. Footer & Official Contact Info */}
       <Footer
         onSelectCategory={(cat) => handleCategoryChange(cat)}
-        onNavigateTab={(tab) => {
-          setActiveTab(tab);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
+        onNavigateTab={handleNavigateTab}
       />
 
       {/* 8. Full Interactive Article Reader Modal */}

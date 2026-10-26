@@ -3,14 +3,16 @@ import { Search, Bookmark, Menu, X, Sparkles } from 'lucide-react';
 import { TechCategory } from '../types/blog';
 import { TechLogoFull } from './Logo';
 
+export type NavTab = 'feed' | 'about' | 'editors' | 'contact' | 'privacy' | 'terms' | 'editorial-standards';
+
 interface HeaderProps {
   currentCategory: TechCategory | 'All';
   onSelectCategory: (category: TechCategory | 'All') => void;
   onOpenSearch: () => void;
   onOpenBookmarks: () => void;
   bookmarkCount: number;
-  onNavigateTab: (tab: 'feed' | 'about' | 'editors' | 'contact') => void;
-  activeTab: 'feed' | 'about' | 'editors' | 'contact';
+  onNavigateTab: (tab: NavTab) => void;
+  activeTab: NavTab;
 }
 
 export const Header: React.FC<HeaderProps> = ({
