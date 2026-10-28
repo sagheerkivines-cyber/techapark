@@ -355,6 +355,19 @@
     </image:image>
   </url>
 
+  <!-- Article 4.6: Crossplay Games: The Architecture of Unified Multiplayer -->
+  <url>
+    <loc>https://techapark.com/articles/crossplay-games</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://techapark.com/assets/images/crossplay_games_infographic_1793168957348.jpg</image:loc>
+      <image:title>Crossplay Games Unified Architecture Infographic</image:title>
+      <image:caption>Unified Multiplayer Architecture, Netcode Telemetry &amp; Input Balancing</image:caption>
+    </image:image>
+  </url>
+
   <!-- Article 5.1: Windows Shortcut Tricks -->
   <url>
     <loc>https://techapark.com/articles/windows-shortcut-tricks</loc>

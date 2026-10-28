@@ -204,12 +204,13 @@ export default function App() {
     return list;
   }, [selectedCategory, selectedTag]);
 
-  // Pagination calculation: exactly 12 articles per page, remaining on subsequent pages
-  const totalPages = Math.max(1, Math.ceil(filteredArticles.length / ARTICLES_PER_PAGE));
+  // Pagination calculation: 12 articles per page on homepage; 3 articles per line/page in category sections to paginate onto Page 2
+  const pageSize = selectedCategory === 'All' ? ARTICLES_PER_PAGE : 3;
+  const totalPages = Math.max(1, Math.ceil(filteredArticles.length / pageSize));
   const paginatedArticles = useMemo(() => {
-    const start = (currentPage - 1) * ARTICLES_PER_PAGE;
-    return filteredArticles.slice(start, start + ARTICLES_PER_PAGE);
-  }, [filteredArticles, currentPage]);
+    const start = (currentPage - 1) * pageSize;
+    return filteredArticles.slice(start, start + pageSize);
+  }, [filteredArticles, currentPage, pageSize]);
 
   const handleCategoryChange = (cat: TechCategory | 'All') => {
     setSelectedCategory(cat);
@@ -323,7 +324,7 @@ export default function App() {
                   {selectedCategory === 'All' ? 'Latest Blog Stories & Articles' : selectedCategory}
                 </h3>
                 <p className="text-xs text-emerald-400/90 font-mono mt-1">
-                  Showing {paginatedArticles.length} of {filteredArticles.length} technical guides (3 in each line · 12 per page)
+                  Showing {paginatedArticles.length} of {filteredArticles.length} technical guides (3 in each line · {pageSize} per page)
                 </p>
               </div>
 
@@ -414,7 +415,7 @@ export default function App() {
                     
                     <div className="text-xs font-mono text-slate-300">
                       Showing Page <span className="text-[#34d399] font-bold">{currentPage}</span> of{' '}
-                      <span className="text-white font-bold">{totalPages}</span> ({filteredArticles.length} total articles · 12 per page)
+                      <span className="text-white font-bold">{totalPages}</span> ({filteredArticles.length} total articles · {pageSize} per page)
                     </div>
 
                     <div className="flex items-center gap-2">

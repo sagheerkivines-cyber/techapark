@@ -55,7 +55,7 @@ export const CATEGORIES_LIST: CategoryMeta[] = [
     accentColor: '#f43f5e',
     badgeColor: 'border-rose-400/40 text-rose-400',
     icon: 'Gamepad2',
-    articleCount: 5
+    articleCount: 6
   },
   {
     id: 'Tech Tips & Troubleshooting',
