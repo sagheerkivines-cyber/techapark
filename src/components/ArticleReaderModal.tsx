@@ -68,8 +68,8 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
   };
 
   const canonicalFullUrl = typeof window !== 'undefined' 
-    ? `${window.location.origin}/articles/${article.slug}` 
-    : `https://techapark.com/articles/${article.slug}`;
+    ? `${window.location.origin}/articles/${article.slug}/` 
+    : `https://techapark.com/articles/${article.slug}/`;
 
   const handleCopyArticleUrl = () => {
     navigator.clipboard.writeText(canonicalFullUrl);
@@ -211,7 +211,7 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
               <span className="hidden sm:inline text-[10px] text-emerald-400 tracking-wider uppercase font-bold">Article Link:</span>
             </div>
             <a
-              href={`/articles/${article.slug}`}
+              href={`/articles/${article.slug}/`}
               className="text-[#5fdee7] hover:underline truncate select-all flex-1 tracking-tight text-xs font-mono"
               title={`Permanent URL: ${canonicalFullUrl}`}
               onClick={(e) => {
@@ -237,7 +237,7 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
             </button>
 
             <a
-              href={`/articles/${article.slug}`}
+              href={`/articles/${article.slug}/`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#07241e] hover:bg-[#0a3329] text-slate-200 hover:text-[#5fdee7] border border-[#5fdee7]/30 transition-all shadow-sm"

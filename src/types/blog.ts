@@ -64,4 +64,5 @@ export interface Article {
   infographic: InfographicData;
   sections: ArticleSection[];
   keyTakeaways: string[];
+  faq?: { question: string; answer: string; }[];
 }

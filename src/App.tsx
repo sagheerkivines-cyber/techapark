@@ -69,7 +69,7 @@ export default function App() {
   const openArticle = (article: Article) => {
     setActiveArticle(article);
     try {
-      window.history.pushState({ articleId: article.id }, '', `/articles/${article.slug}`);
+      window.history.pushState({ articleId: article.id }, '', `/articles/${article.slug}/`);
       document.title = `${article.title} | TechAPark Engineering Journal`;
 
       // Update canonical link for search engines & indexing crawlers
@@ -79,7 +79,7 @@ export default function App() {
         canonical.setAttribute('rel', 'canonical');
         document.head.appendChild(canonical);
       }
-      canonical.setAttribute('href', `https://techapark.com/articles/${article.slug}`);
+      canonical.setAttribute('href', `https://techapark.com/articles/${article.slug}/`);
 
       let ogUrl = document.querySelector("meta[property='og:url']") as HTMLMetaElement | null;
       if (!ogUrl) {
@@ -155,12 +155,21 @@ export default function App() {
       const searchParams = new URLSearchParams(window.location.search);
       const hash = window.location.hash.replace(/^#\/?/, '');
 
-      // 1. Article direct link: /articles/:slug or ?article=:slug or #articles/:slug or #:slug
+      // 1. Article direct link: /articles/:slug, /articles/:slug/, /articles/:slug/index.html, ?article=:slug, ?p=/articles/:slug
       let targetSlug = searchParams.get('article');
+      if (!targetSlug && searchParams.get('p')) {
+        const pVal = searchParams.get('p') || '';
+        const match = pVal.match(/\/articles\/([^/?#]+)/);
+        if (match) targetSlug = match[1];
+      }
       if (!targetSlug && path.startsWith('/articles/')) {
-        targetSlug = path.replace(/^\/articles\//, '').replace(/\/$/, '');
-      } else if (!targetSlug && (hash.startsWith('articles/') || hash)) {
-        targetSlug = hash.replace(/^articles\//, '');
+        targetSlug = path
+          .replace(/^\/articles\//, '')
+          .replace(/\/index\.html$/i, '')
+          .replace(/\/$/, '');
+      } else if (!targetSlug && (hash.includes('articles/'))) {
+        const match = hash.match(/articles\/([^/?#]+)/);
+        if (match) targetSlug = match[1];
       }
 
       if (targetSlug) {

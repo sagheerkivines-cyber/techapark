@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechAPark | Page Routing & Lookup</title>
+    <meta name="description" content="TechAPark Engineering Journal Article Routing and Content Resolution System." />
+    <meta name="theme-color" content="#081c18" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+    <script>
+      // Single Page Apps for GitHub Pages and Static Servers
+      // https://github.com/rafgraph/spa-github-pages
+      // This script takes the current url and redirects to index.html with query params
+      (function() {
+        var path = window.location.pathname;
+        var search = window.location.search;
+        var hash = window.location.hash;
+
+        // Check if path is an article like /articles/something
+        var articleMatch = path.match(/\/articles\/([^\/]+)\/?$/);
+        if (articleMatch && articleMatch[1]) {
+          var slug = articleMatch[1];
+          // Redirect immediately to root with article query parameter
+          var target = window.location.origin + '/?article=' + encodeURIComponent(slug);
+          window.location.replace(target);
+          return;
+        }
+
+        // Check if path is a category like /category/something
+        var catMatch = path.match(/\/category\/([^\/]+)\/?$/);
+        if (catMatch && catMatch[1]) {
+          var catSlug = catMatch[1];
+          var targetCat = window.location.origin + '/?category=' + encodeURIComponent(catSlug);
+          window.location.replace(targetCat);
+          return;
+        }
+
+        // Generic static fallback to SPA entry
+        if (path !== '/' && path !== '/index.html') {
+          var genericTarget = window.location.origin + '/?p=' + encodeURIComponent(path + search + hash);
+          window.location.replace(genericTarget);
+        }
+      })();
+    </script>
+    <style>
+      body {
+        margin: 0;
+        background-color: #081c18;
+        color: #f1f5f9;
+        font-family: 'JetBrains Mono', monospace;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        text-align: center;
+        padding: 1.5rem;
+      }
+      .card {
+        background: #041a15;
+        border: 1px solid rgba(16,185,129,0.3);
+        border-radius: 1rem;
+        padding: 2.5rem 2rem;
+        max-width: 500px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      }
+      h1 {
+        font-family: 'Outfit', sans-serif;
+        color: #5fdee7;
+        font-size: 2rem;
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+      }
+      p {
+        color: #94a3b8;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+      }
+      .spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid rgba(16,185,129,0.2);
+        border-top-color: #10b981;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 1.5rem;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      a.btn {
+        display: inline-block;
+        background: #10b981;
+        color: #041a15;
+        font-weight: 700;
+        text-decoration: none;
+        padding: 0.65rem 1.5rem;
+        border-radius: 0.5rem;
+        transition: background 0.2s;
+      }
+      a.btn:hover {
+        background: #34d399;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="spinner"></div>
+      <h1>Redirecting to Article...</h1>
+      <p>Locating requested engineering report in the TechAPark archive...</p>
+      <a href="/" class="btn">Go to TechAPark Feed</a>
+    </div>
+  </body>
+</html>

@@ -284,7 +284,7 @@ export const FeedSidebar: React.FC<FeedSidebarProps> = ({
             return (
               <a
                 key={art.id}
-                href={`/articles/${art.slug}`}
+                href={`/articles/${art.slug}/`}
                 onClick={(e) => {
                   if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
                     e.preventDefault();

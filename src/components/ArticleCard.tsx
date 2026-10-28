@@ -27,7 +27,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     >
       {/* Full-card link for accessibility & SEO crawlers */}
       <a
-        href={`/articles/${article.slug}`}
+        href={`/articles/${article.slug}/`}
         onClick={(e) => {
           if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
             e.preventDefault();
@@ -108,7 +108,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           {/* Article Title with Hover Glow - Fixed 2-line rhythm for equal card heights */}
           <h3 className="font-bold font-display tracking-tight text-white group-hover:text-[#34d399] transition-colors leading-snug text-lg mb-2 line-clamp-2 h-[3.25rem] pointer-events-auto">
             <a
-              href={`/articles/${article.slug}`}
+              href={`/articles/${article.slug}/`}
               onClick={(e) => {
                 if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
                   e.preventDefault();
@@ -146,7 +146,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
 
           {/* Fluid arrow-glide translation on hover */}
           <a
-            href={`/articles/${article.slug}`}
+            href={`/articles/${article.slug}/`}
             onClick={(e) => {
               if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
                 e.preventDefault();
