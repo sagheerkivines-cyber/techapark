@@ -21,11 +21,25 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
 
   return (
     <article
-      onClick={() => onOpenArticle(article)}
-      className={`group relative cursor-pointer rounded-2xl bg-[#07251e] border border-[#10b981]/25 hover:border-[#34d399] transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.35)] hover:shadow-[0_0_25px_rgba(16,185,129,0.25)] hover:-translate-y-1 overflow-hidden flex flex-col justify-between h-full ${
+      className={`group relative rounded-2xl bg-[#07251e] border border-[#10b981]/25 hover:border-[#34d399] transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.35)] hover:shadow-[0_0_25px_rgba(16,185,129,0.25)] hover:-translate-y-1 overflow-hidden flex flex-col justify-between h-full ${
         isFeatured ? 'md:col-span-2 lg:col-span-2' : 'col-span-1'
       }`}
     >
+      {/* Full-card link for accessibility & SEO crawlers */}
+      <a
+        href={`/articles/${article.slug}`}
+        onClick={(e) => {
+          if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+            e.preventDefault();
+            onOpenArticle(article);
+          }
+        }}
+        className="absolute inset-0 z-10"
+        aria-label={`Read article: ${article.title}`}
+      >
+        <span className="sr-only">Read {article.title}</span>
+      </a>
+
       {/* Visual Thumbnail Area - Uniform equal height */}
       <div className={`relative w-full overflow-hidden bg-[#041a15] shrink-0 ${isFeatured ? 'h-64' : 'h-48'}`}>
         {article.imageUrl ? (
@@ -57,10 +71,11 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         <button
           onClick={(e) => {
             e.stopPropagation();
+            e.preventDefault();
             onToggleBookmark(article.id);
           }}
           aria-label={isBookmarked ? 'Remove from bookmarks' : 'Save to bookmarks'}
-          className={`absolute top-3.5 right-3.5 p-2 rounded-lg backdrop-blur-md transition-all ${
+          className={`absolute top-3.5 right-3.5 p-2 rounded-lg backdrop-blur-md transition-all z-20 ${
             isBookmarked
               ? 'bg-[#10b981] text-[#021812] shadow-[0_0_12px_rgba(16,185,129,0.5)]'
               : 'bg-[#041a15]/80 text-slate-300 hover:text-[#34d399] hover:bg-[#07251e] border border-[#10b981]/25'
@@ -70,13 +85,13 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         </button>
 
         {/* Article ID index tag in corner */}
-        <div className="absolute top-3.5 left-3.5 px-2.5 py-1 rounded bg-[#041a15]/85 backdrop-blur-md border border-[#10b981]/30 text-[11px] font-mono font-bold text-emerald-300">
+        <div className="absolute top-3.5 left-3.5 px-2.5 py-1 rounded bg-[#041a15]/85 backdrop-blur-md border border-[#10b981]/30 text-[11px] font-mono font-bold text-emerald-300 z-20">
           ART {article.articleNumber}
         </div>
       </div>
 
       {/* Card Body Area */}
-      <div className="p-6 flex-1 flex flex-col justify-between">
+      <div className="p-6 flex-1 flex flex-col justify-between relative z-20 pointer-events-none">
         <div>
           {/* Zero-Pill Unboxed Metadata line with typographic separators */}
           <div className="flex items-center gap-2 text-xs font-mono text-slate-400 mb-2.5">
@@ -91,8 +106,19 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           </div>
 
           {/* Article Title with Hover Glow - Fixed 2-line rhythm for equal card heights */}
-          <h3 className="font-bold font-display tracking-tight text-white group-hover:text-[#34d399] transition-colors leading-snug text-lg mb-2 line-clamp-2 h-[3.25rem]">
-            {article.title}
+          <h3 className="font-bold font-display tracking-tight text-white group-hover:text-[#34d399] transition-colors leading-snug text-lg mb-2 line-clamp-2 h-[3.25rem] pointer-events-auto">
+            <a
+              href={`/articles/${article.slug}`}
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                  e.preventDefault();
+                  onOpenArticle(article);
+                }
+              }}
+              className="hover:underline"
+            >
+              {article.title}
+            </a>
           </h3>
 
           {/* Subtitle / Deck */}
@@ -119,10 +145,19 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           </div>
 
           {/* Fluid arrow-glide translation on hover */}
-          <div className="flex items-center gap-1.5 text-xs font-bold text-[#34d399] group-hover:translate-x-1.5 transition-transform duration-200">
+          <a
+            href={`/articles/${article.slug}`}
+            onClick={(e) => {
+              if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                e.preventDefault();
+                onOpenArticle(article);
+              }
+            }}
+            className="flex items-center gap-1.5 text-xs font-bold text-[#34d399] group-hover:translate-x-1.5 transition-transform duration-200 pointer-events-auto"
+          >
             <span>Read Article</span>
             <ArrowRight className="w-3.5 h-3.5" />
-          </div>
+          </a>
         </div>
 
       </div>

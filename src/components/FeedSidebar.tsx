@@ -282,10 +282,16 @@ export const FeedSidebar: React.FC<FeedSidebarProps> = ({
               : false;
 
             return (
-              <div
+              <a
                 key={art.id}
-                onClick={() => onOpenArticle(art)}
-                className={`group cursor-pointer rounded-xl p-3 border transition-all duration-200 flex gap-3 ${
+                href={`/articles/${art.slug}`}
+                onClick={(e) => {
+                  if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                    e.preventDefault();
+                    onOpenArticle(art);
+                  }
+                }}
+                className={`group cursor-pointer rounded-xl p-3 border transition-all duration-200 flex gap-3 text-inherit no-underline block ${
                   matchesActiveTag
                     ? 'bg-[#0c382e] border-[#10b981] shadow-[0_0_15px_rgba(16,185,129,0.2)]'
                     : 'bg-[#092c23] border-[#10b981]/20 hover:border-[#34d399] hover:bg-[#0c382e]'
@@ -331,7 +337,7 @@ export const FeedSidebar: React.FC<FeedSidebarProps> = ({
                     </span>
                   </div>
                 </div>
-              </div>
+              </a>
             );
           })}
         </div>

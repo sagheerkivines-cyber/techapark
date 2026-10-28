@@ -71,6 +71,23 @@ export default function App() {
     try {
       window.history.pushState({ articleId: article.id }, '', `/articles/${article.slug}`);
       document.title = `${article.title} | TechAPark Engineering Journal`;
+
+      // Update canonical link for search engines & indexing crawlers
+      let canonical = document.querySelector("link[rel='canonical']") as HTMLLinkElement | null;
+      if (!canonical) {
+        canonical = document.createElement('link');
+        canonical.setAttribute('rel', 'canonical');
+        document.head.appendChild(canonical);
+      }
+      canonical.setAttribute('href', `https://techapark.com/articles/${article.slug}`);
+
+      let ogUrl = document.querySelector("meta[property='og:url']") as HTMLMetaElement | null;
+      if (!ogUrl) {
+        ogUrl = document.createElement('meta');
+        ogUrl.setAttribute('property', 'og:url');
+        document.head.appendChild(ogUrl);
+      }
+      ogUrl.setAttribute('content', `https://techapark.com/articles/${article.slug}`);
     } catch {}
   };
 
@@ -80,6 +97,16 @@ export default function App() {
       const targetPath = activeTab === 'feed' ? '/' : `/${activeTab}`;
       window.history.pushState({}, '', targetPath);
       syncDocumentTitle(activeTab);
+
+      let canonical = document.querySelector("link[rel='canonical']") as HTMLLinkElement | null;
+      if (canonical) {
+        canonical.setAttribute('href', `https://techapark.com${targetPath === '/' ? '' : targetPath}`);
+      }
+
+      let ogUrl = document.querySelector("meta[property='og:url']") as HTMLMetaElement | null;
+      if (ogUrl) {
+        ogUrl.setAttribute('content', `https://techapark.com${targetPath === '/' ? '' : targetPath}`);
+      }
     } catch {}
   };
 

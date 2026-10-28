@@ -4,7 +4,8 @@ import { InfographicViewer } from './InfographicViewer';
 import { 
   X, Bookmark, Share2, Volume2, VolumeX, Check, 
   ArrowLeft, Clock, Calendar, User, Eye, 
-  CheckCircle2, Copy, BookOpen, Sparkles, ArrowRight
+  CheckCircle2, Copy, BookOpen, Sparkles, ArrowRight,
+  Lock, ExternalLink, Globe
 } from 'lucide-react';
 
 interface ArticleReaderModalProps {
@@ -29,6 +30,7 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [copiedCodeIndex, setCopiedCodeIndex] = useState<number | null>(null);
   const [shareSuccess, setShareSuccess] = useState(false);
+  const [copiedUrl, setCopiedUrl] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Reset scroll and audio on article change
@@ -65,17 +67,25 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
     setTimeout(() => setCopiedCodeIndex(null), 2000);
   };
 
+  const canonicalFullUrl = typeof window !== 'undefined' 
+    ? `${window.location.origin}/articles/${article.slug}` 
+    : `https://techapark.com/articles/${article.slug}`;
+
+  const handleCopyArticleUrl = () => {
+    navigator.clipboard.writeText(canonicalFullUrl);
+    setCopiedUrl(true);
+    setTimeout(() => setCopiedUrl(false), 2500);
+  };
+
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
         title: article.title,
         text: article.subtitle,
-        url: window.location.href,
+        url: canonicalFullUrl,
       }).catch(() => {});
     } else {
-      navigator.clipboard.writeText(window.location.href);
-      setShareSuccess(true);
-      setTimeout(() => setShareSuccess(false), 2000);
+      handleCopyArticleUrl();
     }
   };
 
@@ -175,10 +185,10 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
             {/* Share button */}
             <button
               onClick={handleShare}
-              title="Share article"
+              title="Share article URL"
               className="p-2 rounded-lg bg-[#081c18] text-slate-300 hover:text-[#5fdee7] border border-[#5fdee7]/25 transition-all"
             >
-              {shareSuccess ? <Check className="w-4 h-4 text-[#10b981]" /> : <Share2 className="w-4 h-4" />}
+              {copiedUrl || shareSuccess ? <Check className="w-4 h-4 text-[#10b981]" /> : <Share2 className="w-4 h-4" />}
             </button>
 
             {/* Close cross */}
@@ -190,6 +200,52 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
               <X className="w-4 h-4" />
             </button>
 
+          </div>
+        </div>
+
+        {/* Real Browser Address & Indexable Search URL Bar */}
+        <div className="px-3 sm:px-6 py-2.5 bg-[#051713] border-b border-[#10b981]/30 flex flex-wrap items-center justify-between gap-3 text-xs font-mono shadow-inner z-30">
+          <div className="flex items-center gap-2.5 flex-1 min-w-[260px] bg-[#030e0b] border border-[#10b981]/40 rounded-lg px-3 py-1.5 shadow-[inset_0_1px_3px_rgba(0,0,0,0.6)]">
+            <div className="flex items-center gap-1.5 text-[#10b981] font-semibold shrink-0">
+              <Lock className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="hidden sm:inline text-[10px] text-emerald-400 tracking-wider uppercase font-bold">Article Link:</span>
+            </div>
+            <a
+              href={`/articles/${article.slug}`}
+              className="text-[#5fdee7] hover:underline truncate select-all flex-1 tracking-tight text-xs font-mono"
+              title={`Permanent URL: ${canonicalFullUrl}`}
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey) {
+                  e.preventDefault();
+                  handleCopyArticleUrl();
+                }
+              }}
+            >
+              {canonicalFullUrl}
+            </a>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={handleCopyArticleUrl}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0e3b31] hover:bg-[#10b981] text-[#a7f3d0] hover:text-[#041a15] font-bold border border-[#10b981]/50 transition-all shadow-sm active:scale-95"
+              title="Copy exact article URL to clipboard for Google Search Console indexing"
+            >
+              {copiedUrl ? <Check className="w-3.5 h-3.5 text-emerald-300" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>{copiedUrl ? 'Link Copied!' : 'Copy Link for Indexing'}</span>
+            </button>
+
+            <a
+              href={`/articles/${article.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#07241e] hover:bg-[#0a3329] text-slate-200 hover:text-[#5fdee7] border border-[#5fdee7]/30 transition-all shadow-sm"
+              title="Open direct URL in separate browser tab so the top browser address bar shows the exact link"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-[#5fdee7]" />
+              <span className="hidden md:inline">Open in Browser Tab</span>
+            </a>
           </div>
         </div>
 
