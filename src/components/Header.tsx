@@ -48,79 +48,113 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-8 h-16">
           
-          {/* Zone 1: Brand wordmark with new custom tech logo */}
+          {/* Zone 1: Brand wordmark with custom tech logo */}
           <div className="flex items-center gap-3 shrink-0">
-            <button
-              onClick={() => {
-                onNavigateTab('feed');
-                onSelectCategory('All');
+            <a
+              href="/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('feed');
+                  onSelectCategory('All');
+                }
               }}
-              className="group flex items-center text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5fdee7] rounded-lg"
+              className="group flex items-center text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#34d399] rounded-lg"
               aria-label="TechAPark Home"
             >
               <TechLogoFull size="md" />
-            </button>
+            </a>
           </div>
 
           {/* Zone 2: 4-5 single-line clean navigation links */}
           <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-300">
-            <button
-              onClick={() => {
-                onNavigateTab('feed');
-                onSelectCategory('All');
+            <a
+              href="/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('feed');
+                  onSelectCategory('All');
+                }
               }}
               className={`whitespace-nowrap shrink-0 hover:text-[#34d399] transition-colors ${
                 activeTab === 'feed' && currentCategory === 'All' ? 'text-[#34d399] font-bold' : ''
               }`}
             >
               Home Feed
-            </button>
-            <button
-              onClick={() => {
-                onNavigateTab('feed');
-                onSelectCategory('Cyber Security & Privacy');
+            </a>
+            <a
+              href="/category/cyber-security-privacy/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('feed');
+                  onSelectCategory('Cyber Security & Privacy');
+                }
               }}
               className={`whitespace-nowrap shrink-0 hover:text-[#34d399] transition-colors ${
                 activeTab === 'feed' && currentCategory === 'Cyber Security & Privacy' ? 'text-[#34d399] font-bold' : ''
               }`}
             >
               Security & Privacy
-            </button>
-            <button
-              onClick={() => {
-                onNavigateTab('feed');
-                onSelectCategory('Cloud Computing & Hosting');
+            </a>
+            <a
+              href="/category/cloud-computing-hosting/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('feed');
+                  onSelectCategory('Cloud Computing & Hosting');
+                }
               }}
               className={`whitespace-nowrap shrink-0 hover:text-[#34d399] transition-colors ${
                 activeTab === 'feed' && currentCategory === 'Cloud Computing & Hosting' ? 'text-[#34d399] font-bold' : ''
               }`}
             >
               Cloud & Hosting
-            </button>
-            <button
-              onClick={() => onNavigateTab('about')}
+            </a>
+            <a
+              href="/about/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('about');
+                }
+              }}
               className={`whitespace-nowrap shrink-0 hover:text-[#34d399] transition-colors ${
                 activeTab === 'about' ? 'text-[#34d399] font-bold' : ''
               }`}
             >
               About The Blog
-            </button>
-            <button
-              onClick={() => onNavigateTab('editors')}
+            </a>
+            <a
+              href="/editors/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('editors');
+                }
+              }}
               className={`whitespace-nowrap shrink-0 hover:text-[#34d399] transition-colors ${
                 activeTab === 'editors' ? 'text-[#34d399] font-bold' : ''
               }`}
             >
               Editors
-            </button>
-            <button
-              onClick={() => onNavigateTab('contact')}
+            </a>
+            <a
+              href="/contact/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('contact');
+                }
+              }}
               className={`whitespace-nowrap shrink-0 hover:text-[#34d399] transition-colors ${
                 activeTab === 'contact' ? 'text-[#34d399] font-bold' : ''
               }`}
             >
               Contact
-            </button>
+            </a>
           </nav>
 
           {/* Zone 3: Primary action & utility triggers */}
@@ -146,13 +180,19 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </button>
 
-            <button
-              onClick={() => onNavigateTab('contact')}
+            <a
+              href="/contact/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('contact');
+                }
+              }}
               className="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#021812] bg-[#10b981] hover:bg-[#34d399] shadow-[0_0_16px_rgba(16,185,129,0.4)] rounded-lg transition-all duration-200 whitespace-nowrap shrink-0 active:scale-95"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Contact Newsroom</span>
-            </button>
+            </a>
 
             {/* Mobile menu trigger */}
             <button
@@ -169,101 +209,137 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Mobile navigation drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#0a231e] border-b border-[#5fdee7]/25 px-4 pt-3 pb-6 space-y-3">
-          <div className="text-[11px] font-mono uppercase text-[#5fdee7]/60 tracking-wider">
+        <div className="lg:hidden bg-[#0a231e] border-b border-[#10b981]/25 px-4 pt-3 pb-6 space-y-3">
+          <div className="text-[11px] font-mono uppercase text-[#34d399]/70 tracking-wider">
             Explore Journal
           </div>
           <div className="grid grid-cols-2 gap-2 text-sm">
-            <button
-              onClick={() => {
-                onNavigateTab('feed');
-                onSelectCategory('All');
-                setMobileMenuOpen(false);
+            <a
+              href="/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('feed');
+                  onSelectCategory('All');
+                  setMobileMenuOpen(false);
+                }
               }}
-              className="p-2.5 rounded-lg bg-[#081c18] text-left text-slate-200 hover:text-[#5fdee7] border border-[#5fdee7]/15"
+              className="p-2.5 rounded-lg bg-[#081c18] text-left text-slate-200 hover:text-[#34d399] border border-[#10b981]/15 block"
             >
               Home Feed
-            </button>
-            <button
-              onClick={() => {
-                onNavigateTab('feed');
-                onSelectCategory('Cyber Security & Privacy');
-                setMobileMenuOpen(false);
+            </a>
+            <a
+              href="/category/cyber-security-privacy/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('feed');
+                  onSelectCategory('Cyber Security & Privacy');
+                  setMobileMenuOpen(false);
+                }
               }}
-              className="p-2.5 rounded-lg bg-[#081c18] text-left text-slate-200 hover:text-[#5fdee7] border border-[#5fdee7]/15"
+              className="p-2.5 rounded-lg bg-[#081c18] text-left text-slate-200 hover:text-[#34d399] border border-[#10b981]/15 block"
             >
               Cyber Security
-            </button>
-            <button
-              onClick={() => {
-                onNavigateTab('feed');
-                onSelectCategory('Cloud Computing & Hosting');
-                setMobileMenuOpen(false);
+            </a>
+            <a
+              href="/category/cloud-computing-hosting/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('feed');
+                  onSelectCategory('Cloud Computing & Hosting');
+                  setMobileMenuOpen(false);
+                }
               }}
-              className="p-2.5 rounded-lg bg-[#081c18] text-left text-slate-200 hover:text-[#5fdee7] border border-[#5fdee7]/15"
+              className="p-2.5 rounded-lg bg-[#081c18] text-left text-slate-200 hover:text-[#34d399] border border-[#10b981]/15 block"
             >
               Cloud & Hosting
-            </button>
-            <button
-              onClick={() => {
-                onNavigateTab('feed');
-                onSelectCategory('Freelancing & Remote Work');
-                setMobileMenuOpen(false);
+            </a>
+            <a
+              href="/category/freelancing-remote-work/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('feed');
+                  onSelectCategory('Freelancing & Remote Work');
+                  setMobileMenuOpen(false);
+                }
               }}
-              className="p-2.5 rounded-lg bg-[#081c18] text-left text-slate-200 hover:text-[#5fdee7] border border-[#5fdee7]/15"
+              className="p-2.5 rounded-lg bg-[#081c18] text-left text-slate-200 hover:text-[#34d399] border border-[#10b981]/15 block"
             >
               Freelancing
-            </button>
-            <button
-              onClick={() => {
-                onNavigateTab('feed');
-                onSelectCategory('Gaming & Tech Culture');
-                setMobileMenuOpen(false);
+            </a>
+            <a
+              href="/category/gaming-tech-culture/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('feed');
+                  onSelectCategory('Gaming & Tech Culture');
+                  setMobileMenuOpen(false);
+                }
               }}
-              className="p-2.5 rounded-lg bg-[#081c18] text-left text-slate-200 hover:text-[#5fdee7] border border-[#5fdee7]/15"
+              className="p-2.5 rounded-lg bg-[#081c18] text-left text-slate-200 hover:text-[#34d399] border border-[#10b981]/15 block"
             >
               Gaming Culture
-            </button>
-            <button
-              onClick={() => {
-                onNavigateTab('feed');
-                onSelectCategory('Tech Tips & Troubleshooting');
-                setMobileMenuOpen(false);
+            </a>
+            <a
+              href="/category/tech-tips-troubleshooting/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('feed');
+                  onSelectCategory('Tech Tips & Troubleshooting');
+                  setMobileMenuOpen(false);
+                }
               }}
-              className="p-2.5 rounded-lg bg-[#081c18] text-left text-slate-200 hover:text-[#5fdee7] border border-[#5fdee7]/15"
+              className="p-2.5 rounded-lg bg-[#081c18] text-left text-slate-200 hover:text-[#34d399] border border-[#10b981]/15 block"
             >
               Tech Tips
-            </button>
+            </a>
           </div>
 
-          <div className="pt-2 border-t border-[#5fdee7]/15 flex items-center justify-between text-sm">
-            <button
-              onClick={() => {
-                onNavigateTab('about');
-                setMobileMenuOpen(false);
+          <div className="pt-2 border-t border-[#10b981]/15 flex items-center justify-between text-sm">
+            <a
+              href="/about/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('about');
+                  setMobileMenuOpen(false);
+                }
               }}
-              className="text-slate-300 hover:text-[#5fdee7]"
+              className="text-slate-300 hover:text-[#34d399]"
             >
               About The Blog
-            </button>
-            <button
-              onClick={() => {
-                onNavigateTab('editors');
-                setMobileMenuOpen(false);
+            </a>
+            <a
+              href="/editors/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('editors');
+                  setMobileMenuOpen(false);
+                }
               }}
-              className="text-slate-300 hover:text-[#5fdee7]"
+              className="text-slate-300 hover:text-[#34d399]"
             >
               Editors
-            </button>
-            <button
-              onClick={() => {
-                onNavigateTab('contact');
-                setMobileMenuOpen(false);
+            </a>
+            <a
+              href="/contact/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigateTab('contact');
+                  setMobileMenuOpen(false);
+                }
               }}
-              className="text-[#5fdee7] font-semibold"
+              className="text-[#34d399] font-semibold"
             >
               Contact
-            </button>
+            </a>
           </div>
         </div>
       )}

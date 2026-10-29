@@ -70,15 +70,19 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onNavigateTab 
             <ul className="space-y-2.5 text-xs">
               {CATEGORIES_LIST.map((cat) => (
                 <li key={cat.id}>
-                  <button
-                    onClick={() => {
-                      onSelectCategory(cat.id);
-                      onNavigateTab('feed');
+                  <a
+                    href={`/category/${cat.slug}/`}
+                    onClick={(e) => {
+                      if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                        e.preventDefault();
+                        onSelectCategory(cat.id);
+                        onNavigateTab('feed');
+                      }
                     }}
-                    className="text-slate-300 hover:text-[#34d399] transition-colors text-left"
+                    className="text-slate-300 hover:text-[#34d399] transition-colors text-left block"
                   >
                     {cat.shortTitle}
-                  </button>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -91,36 +95,60 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onNavigateTab 
             </h4>
             <ul className="space-y-2.5 text-xs text-slate-300">
               <li>
-                <button 
-                  onClick={() => onNavigateTab('feed')} 
-                  className="hover:text-[#34d399] transition-colors"
+                <a 
+                  href="/feed/"
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                      e.preventDefault();
+                      onNavigateTab('feed');
+                    }
+                  }} 
+                  className="hover:text-[#34d399] transition-colors block"
                 >
                   Daily Wire Feed
-                </button>
+                </a>
               </li>
               <li>
-                <button 
-                  onClick={() => onNavigateTab('about')} 
-                  className="hover:text-[#34d399] transition-colors"
+                <a 
+                  href="/about/"
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                      e.preventDefault();
+                      onNavigateTab('about');
+                    }
+                  }} 
+                  className="hover:text-[#34d399] transition-colors block"
                 >
                   Editorial Manifesto
-                </button>
+                </a>
               </li>
               <li>
-                <button 
-                  onClick={() => onNavigateTab('editors')} 
-                  className="hover:text-[#34d399] transition-colors"
+                <a 
+                  href="/editors/"
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                      e.preventDefault();
+                      onNavigateTab('editors');
+                    }
+                  }} 
+                  className="hover:text-[#34d399] transition-colors block"
                 >
                   Board of Editors
-                </button>
+                </a>
               </li>
               <li>
-                <button 
-                  onClick={() => onNavigateTab('contact')} 
-                  className="hover:text-[#34d399] transition-colors"
+                <a 
+                  href="/contact/"
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                      e.preventDefault();
+                      onNavigateTab('contact');
+                    }
+                  }} 
+                  className="hover:text-[#34d399] transition-colors block"
                 >
                   Submit Investigation / Pitch
-                </button>
+                </a>
               </li>
               <li>
                 <a 
@@ -143,48 +171,78 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onNavigateTab 
             </h4>
             <ul className="space-y-2.5 text-xs text-slate-300">
               <li>
-                <button
-                  onClick={() => onNavigateTab('about')}
+                <a
+                  href="/about/"
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                      e.preventDefault();
+                      onNavigateTab('about');
+                    }
+                  }}
                   className="hover:text-[#34d399] transition-colors text-left flex items-center gap-1.5"
                 >
                   <span>About Us</span>
                   <span className="text-[10px] font-mono text-[#34d399] bg-[#10b981]/15 px-1.5 py-0.5 rounded">Core</span>
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => onNavigateTab('contact')}
+                <a
+                  href="/contact/"
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                      e.preventDefault();
+                      onNavigateTab('contact');
+                    }
+                  }}
                   className="hover:text-[#34d399] transition-colors text-left flex items-center gap-1.5"
                 >
                   <span>Contact Us</span>
                   <span className="text-[10px] font-mono text-[#10b981] bg-[#10b981]/15 px-1.5 py-0.5 rounded">Desk</span>
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => onNavigateTab('privacy')}
+                <a
+                  href="/privacy/"
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                      e.preventDefault();
+                      onNavigateTab('privacy');
+                    }
+                  }}
                   className="hover:text-[#34d399] transition-colors text-left flex items-center gap-1.5"
                 >
                   <span>Privacy Policy</span>
                   <span className="text-[10px] font-mono text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">GDPR</span>
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => onNavigateTab('terms')}
+                <a
+                  href="/terms/"
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                      e.preventDefault();
+                      onNavigateTab('terms');
+                    }
+                  }}
                   className="hover:text-[#34d399] transition-colors text-left flex items-center gap-1.5"
                 >
                   <span>Terms & Conditions</span>
                   <span className="text-[10px] font-mono text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">Legal</span>
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => onNavigateTab('editorial-standards')}
+                <a
+                  href="/editorial-standards/"
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                      e.preventDefault();
+                      onNavigateTab('editorial-standards');
+                    }
+                  }}
                   className="hover:text-[#34d399] transition-colors text-left flex items-center gap-1.5"
                 >
                   <span>Editorial Standards & Peer Review</span>
-                </button>
+                </a>
               </li>
               <li className="pt-1 border-t border-[#10b981]/15">
                 <a

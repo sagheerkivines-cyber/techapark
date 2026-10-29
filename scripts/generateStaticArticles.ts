@@ -7,6 +7,7 @@ import { CATEGORY_3_ARTICLES } from '../src/data/articles/category3';
 import { CATEGORY_4_ARTICLES } from '../src/data/articles/category4';
 import { CATEGORY_5_ARTICLES } from '../src/data/articles/category5';
 import { ARTICLE_IMAGE_FILENAMES } from '../src/data/articleImageMap';
+import { CATEGORIES_LIST } from '../src/data/categories';
 
 const ALL_ARTICLES = [
   ...CATEGORY_1_ARTICLES,
@@ -21,13 +22,16 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 const publicDir = path.resolve(rootDir, 'public');
 const articlesDir = path.resolve(publicDir, 'articles');
+const categoryDir = path.resolve(publicDir, 'category');
 
-// Ensure public/articles directory exists
-if (!fs.existsSync(articlesDir)) {
-  fs.mkdirSync(articlesDir, { recursive: true });
+// Ensure base directories exist
+for (const dir of [publicDir, articlesDir, categoryDir]) {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
 }
 
-console.log(`Generating static HTML pages for ${ALL_ARTICLES.length} articles...`);
+console.log(`Generating static HTML pages for all ${ALL_ARTICLES.length} articles...`);
 
 for (const article of ALL_ARTICLES) {
   const articleFolder = path.resolve(articlesDir, article.slug);
@@ -271,30 +275,293 @@ ${JSON.stringify(structuredData, null, 2)}
   fs.writeFileSync(path.resolve(articleFolder, 'index.html'), html.trim(), 'utf-8');
 }
 
-console.log(`Successfully generated static HTML pages for all ${ALL_ARTICLES.length} articles in /public/articles/[slug]/index.html`);
+console.log(`Successfully generated static HTML pages for all ${ALL_ARTICLES.length} articles.`);
+
+// ==========================================
+// Generate Static Pages for Categories & Hubs
+// ==========================================
+console.log('Generating static HTML pages for all categories...');
+
+const CATEGORIES_TO_GENERATE = [
+  ...CATEGORIES_LIST,
+  // Add hardware-troubleshooting alias to prevent 404
+  {
+    id: 'Tech Tips & Troubleshooting' as const,
+    num: 5,
+    slug: 'hardware-troubleshooting',
+    shortTitle: 'Hardware & Tech Troubleshooting',
+    description: 'Kernel diagnostic heuristics, battery discharge optimization, peripheral bus recovery, and low-level OS stabilization.',
+    accentColor: '#f59e0b',
+    badgeColor: 'border-amber-400/40 text-amber-400',
+    icon: 'Wrench',
+    articleCount: 4
+  }
+];
+
+for (const cat of CATEGORIES_TO_GENERATE) {
+  const catFolder = path.resolve(categoryDir, cat.slug);
+  if (!fs.existsSync(catFolder)) {
+    fs.mkdirSync(catFolder, { recursive: true });
+  }
+
+  const catArticles = ALL_ARTICLES.filter(a => a.category === cat.id);
+  const catCanonical = `https://techapark.com/category/${cat.slug}/`;
+
+  const catHtml = `<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${escapeHtml(cat.shortTitle)} | TechAPark Engineering Journal</title>
+    <meta name="description" content="${escapeHtml(cat.description)}" />
+    <link rel="canonical" href="${catCanonical}" />
+
+    <meta property="og:title" content="${escapeHtml(cat.shortTitle)} | TechAPark" />
+    <meta property="og:description" content="${escapeHtml(cat.description)}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="${catCanonical}" />
+    <meta property="og:site_name" content="TechAPark" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${escapeHtml(cat.shortTitle)}" />
+    <meta name="twitter:description" content="${escapeHtml(cat.description)}" />
+
+    <meta name="theme-color" content="#081c18" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.svg" />
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#081c18] text-slate-100 antialiased selection:bg-[#5fdee7]/25 selection:text-[#5fdee7]">
+    <div id="root">
+      <header style="background: #041a15; border-bottom: 1px solid rgba(16,185,129,0.3); padding: 0.75rem 1.5rem; display: flex; align-items: center; justify-content: space-between; font-family: monospace; font-size: 0.85rem;">
+        <div>
+          <a href="/" style="color: #5fdee7; text-decoration: none; font-weight: 600;">← TechAPark Engineering Journal</a>
+          <span style="color: #64748b; margin: 0 0.5rem;">/</span>
+          <span style="color: #10b981;">Category Hub</span>
+        </div>
+        <a href="/" style="background: #0e3b31; color: #34d399; padding: 0.35rem 0.75rem; border-radius: 0.375rem; border: 1px solid rgba(16,185,129,0.3); text-decoration: none;">
+          Open Journal
+        </a>
+      </header>
+
+      <main style="max-width: 960px; margin: 0 auto; padding: 3rem 1.5rem;">
+        <div style="font-family: monospace; font-size: 0.85rem; color: #10b981; text-transform: uppercase; margin-bottom: 0.5rem;">
+          Discipline Hub ${cat.num}
+        </div>
+        <h1 style="font-size: 2.5rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #ffffff; margin: 0 0 1rem 0;">
+          ${escapeHtml(cat.id)}
+        </h1>
+        <p style="font-size: 1.15rem; color: #cbd5e1; line-height: 1.7; margin-bottom: 2.5rem;">
+          ${escapeHtml(cat.description)}
+        </p>
+
+        <h2 style="font-size: 1.4rem; font-weight: 700; color: #5fdee7; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(95,222,231,0.2); padding-bottom: 0.5rem;">
+          Published Technical Investigations (${catArticles.length})
+        </h2>
+
+        <div style="display: grid; gap: 1.5rem;">
+          ${catArticles.map(art => `
+            <article style="background: #07241e; border: 1px solid rgba(16,185,129,0.25); border-radius: 0.75rem; padding: 1.5rem;">
+              <div style="font-family: monospace; font-size: 0.75rem; color: #5fdee7; margin-bottom: 0.5rem;">
+                Article ${escapeHtml(art.articleNumber)} · ${escapeHtml(art.readTime)} · ${escapeHtml(art.publishDate)}
+              </div>
+              <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 0.5rem 0;">
+                <a href="/articles/${art.slug}/" style="color: #ffffff; text-decoration: none;">
+                  ${escapeHtml(art.title)}
+                </a>
+              </h3>
+              <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.6; margin: 0 0 1rem 0;">
+                ${escapeHtml(art.summary)}
+              </p>
+              <a href="/articles/${art.slug}/" style="color: #10b981; font-family: monospace; font-size: 0.85rem; font-weight: 600; text-decoration: none;">
+                Read Full Investigation →
+              </a>
+            </article>
+          `).join('\n')}
+        </div>
+      </main>
+    </div>
+
+    <!-- SPA Hydration Script -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>`;
+
+  fs.writeFileSync(path.resolve(catFolder, 'index.html'), catHtml.trim(), 'utf-8');
+}
+
+// ==========================================
+// Generate Static Pages for Tabs & Departments
+// ==========================================
+console.log('Generating static HTML pages for department and policy pages...');
+
+const STATIC_SECTIONS = [
+  {
+    folder: 'about',
+    title: 'About TechAPark | Engineering Journal & Laboratory',
+    description: 'TechAPark is an independent technical journal and hardware evaluation laboratory examining cryptography, cloud infrastructure, and modern silicon benchmarks.',
+    heading: 'About TechAPark Engineering Journal',
+    subheading: 'Peer-Reviewed Technical Investigations & Hardware Verification Laboratory'
+  },
+  {
+    folder: 'editors',
+    title: 'Board of Editors & Lab Specialists | TechAPark',
+    description: 'Meet the technical editors, research fellows, and laboratory engineers publishing rigorous benchmarks and investigations at TechAPark.',
+    heading: 'Board of Editors & Research Fellows',
+    subheading: 'Technical Authors, Peer Reviewers & Evaluation Specialists'
+  },
+  {
+    folder: 'contact',
+    title: 'Newsroom Hotlines & Contact Desks | TechAPark',
+    description: 'Official contact desks, editorial pitch lines, WhatsApp channels, and newsroom hotlines for TechAPark.',
+    heading: 'Newsroom Hotlines & Contact Desks',
+    subheading: 'Official Communications, Direct WhatsApp Channels & Editorial Desks'
+  },
+  {
+    folder: 'privacy',
+    title: 'Privacy Policy & Data Protection Charter | TechAPark',
+    description: 'Our comprehensive privacy policy, zero-telemetry commitments, cookie policy, and GDPR/CCPA data protection charters.',
+    heading: 'Privacy Policy & Data Protection Charter',
+    subheading: 'Zero-Telemetry Commitments & Cryptographic User Privacy'
+  },
+  {
+    folder: 'terms',
+    title: 'Terms & Conditions of Service | TechAPark',
+    description: 'Terms and conditions governing access to TechAPark editorial publications, benchmark data, and technical distributions.',
+    heading: 'Terms & Conditions of Service',
+    subheading: 'Technical Distribution Licenses & Service Terms'
+  },
+  {
+    folder: 'editorial-standards',
+    title: 'Editorial Standards & Peer Review Policy | TechAPark',
+    description: 'Editorial standards, peer review guidelines, anti-plagiarism protocols, and reproducibility benchmarks followed by TechAPark.',
+    heading: 'Editorial Standards & Peer Review Protocols',
+    subheading: 'Reproducibility Charters, Benchmark Ethics & Lab Standards'
+  },
+  {
+    folder: 'feed',
+    title: 'Daily Wire Feed | TechAPark Engineering Journal',
+    description: 'Live continuous daily wire feed of cybersecurity, cloud systems, and high-performance hardware investigations.',
+    heading: 'TechAPark Daily Wire Feed',
+    subheading: 'Real-Time Technical Dispatch & Continuous Engineering Feed'
+  }
+];
+
+for (const sec of STATIC_SECTIONS) {
+  const secFolder = path.resolve(publicDir, sec.folder);
+  if (!fs.existsSync(secFolder)) {
+    fs.mkdirSync(secFolder, { recursive: true });
+  }
+
+  const secCanonical = `https://techapark.com/${sec.folder}/`;
+
+  const secHtml = `<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${escapeHtml(sec.title)}</title>
+    <meta name="description" content="${escapeHtml(sec.description)}" />
+    <link rel="canonical" href="${secCanonical}" />
+
+    <meta property="og:title" content="${escapeHtml(sec.title)}" />
+    <meta property="og:description" content="${escapeHtml(sec.description)}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="${secCanonical}" />
+    <meta property="og:site_name" content="TechAPark" />
+
+    <meta name="theme-color" content="#081c18" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.svg" />
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#081c18] text-slate-100 antialiased selection:bg-[#5fdee7]/25 selection:text-[#5fdee7]">
+    <div id="root">
+      <header style="background: #041a15; border-bottom: 1px solid rgba(16,185,129,0.3); padding: 0.75rem 1.5rem; display: flex; align-items: center; justify-content: space-between; font-family: monospace; font-size: 0.85rem;">
+        <div>
+          <a href="/" style="color: #5fdee7; text-decoration: none; font-weight: 600;">← TechAPark Engineering Journal</a>
+        </div>
+        <a href="/" style="background: #0e3b31; color: #34d399; padding: 0.35rem 0.75rem; border-radius: 0.375rem; border: 1px solid rgba(16,185,129,0.3); text-decoration: none;">
+          Main Feed
+        </a>
+      </header>
+
+      <main style="max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem;">
+        <h1 style="font-size: 2.25rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #ffffff; margin: 0 0 0.5rem 0;">
+          ${escapeHtml(sec.heading)}
+        </h1>
+        <p style="font-size: 1.05rem; color: #10b981; font-family: monospace; margin-bottom: 2rem;">
+          ${escapeHtml(sec.subheading)}
+        </p>
+        <p style="font-size: 1.1rem; color: #cbd5e1; line-height: 1.8;">
+          ${escapeHtml(sec.description)}
+        </p>
+      </main>
+    </div>
+
+    <!-- SPA Hydration Script -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>`;
+
+  fs.writeFileSync(path.resolve(secFolder, 'index.html'), secHtml.trim(), 'utf-8');
+}
+
+// ==========================================
+// Generate 404.html (Universal SPA Fallback)
+// ==========================================
+console.log('Generating universal SPA fallback 404.html...');
+
+const notFoundHtml = `<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechAPark | Engineering Journal - Published Daily</title>
+    <meta name="theme-color" content="#081c18" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#081c18] text-slate-100 antialiased selection:bg-[#5fdee7]/25 selection:text-[#5fdee7]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>`;
+
+fs.writeFileSync(path.resolve(publicDir, '404.html'), notFoundHtml.trim(), 'utf-8');
 
 // ==========================================
 // Generate Complete, Google-Validated sitemap.xml
 // ==========================================
-console.log('Generating updated sitemap.xml with 23 articles and image tags...');
+console.log('Generating updated sitemap.xml with all pages, categories, and 23 articles...');
 
 const SITEMAP_STATIC_PAGES = [
   { url: 'https://techapark.com/', priority: '1.0', changefreq: 'daily' },
-  { url: 'https://techapark.com/feed', priority: '0.9', changefreq: 'daily' },
-  { url: 'https://techapark.com/about', priority: '0.85', changefreq: 'weekly' },
-  { url: 'https://techapark.com/editors', priority: '0.80', changefreq: 'weekly' },
-  { url: 'https://techapark.com/contact', priority: '0.85', changefreq: 'weekly' },
-  { url: 'https://techapark.com/privacy', priority: '0.80', changefreq: 'monthly' },
-  { url: 'https://techapark.com/terms', priority: '0.80', changefreq: 'monthly' },
-  { url: 'https://techapark.com/editorial-standards', priority: '0.85', changefreq: 'weekly' }
+  { url: 'https://techapark.com/feed/', priority: '0.9', changefreq: 'daily' },
+  { url: 'https://techapark.com/about/', priority: '0.85', changefreq: 'weekly' },
+  { url: 'https://techapark.com/editors/', priority: '0.80', changefreq: 'weekly' },
+  { url: 'https://techapark.com/contact/', priority: '0.85', changefreq: 'weekly' },
+  { url: 'https://techapark.com/privacy/', priority: '0.80', changefreq: 'monthly' },
+  { url: 'https://techapark.com/terms/', priority: '0.80', changefreq: 'monthly' },
+  { url: 'https://techapark.com/editorial-standards/', priority: '0.85', changefreq: 'weekly' }
 ];
 
 const SITEMAP_CATEGORIES = [
-  { url: 'https://techapark.com/category/cyber-security-privacy', priority: '0.85' },
-  { url: 'https://techapark.com/category/cloud-computing-hosting', priority: '0.85' },
-  { url: 'https://techapark.com/category/freelancing-remote-work', priority: '0.85' },
-  { url: 'https://techapark.com/category/gaming-tech-culture', priority: '0.85' },
-  { url: 'https://techapark.com/category/hardware-troubleshooting', priority: '0.85' }
+  { url: 'https://techapark.com/category/cyber-security-privacy/', priority: '0.85' },
+  { url: 'https://techapark.com/category/cloud-computing-hosting/', priority: '0.85' },
+  { url: 'https://techapark.com/category/freelancing-remote-work/', priority: '0.85' },
+  { url: 'https://techapark.com/category/gaming-tech-culture/', priority: '0.85' },
+  { url: 'https://techapark.com/category/tech-tips-troubleshooting/', priority: '0.85' },
+  { url: 'https://techapark.com/category/hardware-troubleshooting/', priority: '0.85' }
 ];
 
 let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -345,7 +612,7 @@ ${ALL_ARTICLES.map(art => {
 `;
 
 fs.writeFileSync(path.resolve(publicDir, 'sitemap.xml'), sitemapXml.trim(), 'utf-8');
-console.log('Successfully wrote updated /public/sitemap.xml!');
+console.log('Successfully wrote updated /public/sitemap.xml and all static page fallbacks!');
 
 function escapeHtml(str: string): string {
   if (!str) return '';

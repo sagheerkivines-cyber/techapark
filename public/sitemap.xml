@@ -14,49 +14,49 @@
   </url>
 
   <url>
-    <loc>https://techapark.com/feed</loc>
+    <loc>https://techapark.com/feed/</loc>
     <lastmod>2026-10-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://techapark.com/about</loc>
+    <loc>https://techapark.com/about/</loc>
     <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://techapark.com/editors</loc>
+    <loc>https://techapark.com/editors/</loc>
     <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
 
   <url>
-    <loc>https://techapark.com/contact</loc>
+    <loc>https://techapark.com/contact/</loc>
     <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://techapark.com/privacy</loc>
+    <loc>https://techapark.com/privacy/</loc>
     <lastmod>2026-10-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
 
   <url>
-    <loc>https://techapark.com/terms</loc>
+    <loc>https://techapark.com/terms/</loc>
     <lastmod>2026-10-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
 
   <url>
-    <loc>https://techapark.com/editorial-standards</loc>
+    <loc>https://techapark.com/editorial-standards/</loc>
     <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
@@ -64,35 +64,42 @@
 
   <!-- Category Hubs -->
   <url>
-    <loc>https://techapark.com/category/cyber-security-privacy</loc>
+    <loc>https://techapark.com/category/cyber-security-privacy/</loc>
     <lastmod>2026-10-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://techapark.com/category/cloud-computing-hosting</loc>
+    <loc>https://techapark.com/category/cloud-computing-hosting/</loc>
     <lastmod>2026-10-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://techapark.com/category/freelancing-remote-work</loc>
+    <loc>https://techapark.com/category/freelancing-remote-work/</loc>
     <lastmod>2026-10-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://techapark.com/category/gaming-tech-culture</loc>
+    <loc>https://techapark.com/category/gaming-tech-culture/</loc>
     <lastmod>2026-10-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://techapark.com/category/hardware-troubleshooting</loc>
+    <loc>https://techapark.com/category/tech-tips-troubleshooting/</loc>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://techapark.com/category/hardware-troubleshooting/</loc>
     <lastmod>2026-10-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.85</priority>

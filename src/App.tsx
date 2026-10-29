@@ -142,30 +142,35 @@ export default function App() {
     setActiveArticle(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     try {
-      const targetPath = tab === 'feed' ? '/' : `/${tab}`;
+      const targetPath = tab === 'feed' ? '/' : `/${tab}/`;
       window.history.pushState({ tab }, '', targetPath);
       syncDocumentTitle(tab);
+
+      let canonical = document.querySelector("link[rel='canonical']") as HTMLLinkElement | null;
+      if (canonical) {
+        canonical.setAttribute('href', `https://techapark.com${targetPath === '/' ? '' : targetPath}`);
+      }
     } catch {}
   };
 
-  // Deep-linking & URL routing handler for sitemap & direct links
+  // Deep-linking & URL routing handler for all pages, categories, and articles
   useEffect(() => {
     const handleUrlNavigation = () => {
       const path = window.location.pathname;
       const searchParams = new URLSearchParams(window.location.search);
-      const hash = window.location.hash.replace(/^#\/?/, '');
+      const hash = window.location.hash.replace(/^#\/?/, '').toLowerCase();
+      const normPath = path.toLowerCase().replace(/\/index\.html$/i, '').replace(/\/+$/, '') || '/';
 
-      // 1. Article direct link: /articles/:slug, /articles/:slug/, /articles/:slug/index.html, ?article=:slug, ?slug=:slug, ?p=/articles/:slug
+      // 1. Article direct link: /articles/:slug, /articles/:slug/, ?article=:slug, ?slug=:slug, ?p=/articles/:slug
       let targetSlug = searchParams.get('article') || searchParams.get('slug') || searchParams.get('id');
       if (!targetSlug && searchParams.get('p')) {
         const pVal = searchParams.get('p') || '';
         const match = pVal.match(/\/(?:articles|article)\/([^/?#]+)/);
         if (match) targetSlug = match[1];
       }
-      if (!targetSlug && (path.startsWith('/articles/') || path.startsWith('/article/'))) {
-        targetSlug = path
+      if (!targetSlug && (normPath.startsWith('/articles/') || normPath.startsWith('/article/'))) {
+        targetSlug = normPath
           .replace(/^\/(?:articles|article)\//, '')
-          .replace(/\/index\.html$/i, '')
           .replace(/\/$/, '');
       } else if (!targetSlug && (hash.includes('articles/') || hash.includes('article/'))) {
         const match = hash.match(/(?:articles|article)\/([^/?#]+)/);
@@ -186,42 +191,58 @@ export default function App() {
         }
       }
 
-      // 2. Category direct link: /category/:slug or ?category=:slug
+      // 2. Category direct link: /category/:slug, /categories/:slug, ?category=:slug
       let catSlug = searchParams.get('category');
-      if (!catSlug && path.startsWith('/category/')) {
-        catSlug = path.replace(/^\/category\//, '').replace(/\/$/, '');
+      if (!catSlug && (normPath.startsWith('/category/') || normPath.startsWith('/categories/'))) {
+        catSlug = normPath.replace(/^\/(?:category|categories)\//, '').replace(/\/$/, '');
+      } else if (!catSlug && (hash.startsWith('category/') || hash.startsWith('categories/'))) {
+        catSlug = hash.replace(/^(?:category|categories)\//, '');
       }
+
       if (catSlug) {
-        const catObj = CATEGORIES_LIST.find(c => c.slug === catSlug);
+        const cleanCat = decodeURIComponent(catSlug).toLowerCase().trim();
+        // Support aliases like hardware-troubleshooting for tech-tips-troubleshooting
+        const catObj = CATEGORIES_LIST.find(c => 
+          c.slug.toLowerCase() === cleanCat || 
+          (cleanCat === 'hardware-troubleshooting' && c.slug === 'tech-tips-troubleshooting')
+        );
         if (catObj) {
           setSelectedCategory(catObj.id);
           setActiveTab('feed');
+          setActiveArticle(null);
           document.title = `${catObj.shortTitle} | TechAPark Engineering Journal`;
           return;
         }
       }
 
       // 3. Tab navigation: /about, /contact, /privacy, /terms, /editorial-standards, /editors, /feed
-      if (path === '/about' || hash === 'about') {
+      if (normPath === '/about' || hash === 'about') {
         setActiveTab('about');
+        setActiveArticle(null);
         syncDocumentTitle('about');
-      } else if (path === '/contact' || hash === 'contact') {
+      } else if (normPath === '/contact' || hash === 'contact') {
         setActiveTab('contact');
+        setActiveArticle(null);
         syncDocumentTitle('contact');
-      } else if (path === '/privacy' || hash === 'privacy') {
+      } else if (normPath === '/privacy' || hash === 'privacy') {
         setActiveTab('privacy');
+        setActiveArticle(null);
         syncDocumentTitle('privacy');
-      } else if (path === '/terms' || hash === 'terms') {
+      } else if (normPath === '/terms' || hash === 'terms') {
         setActiveTab('terms');
+        setActiveArticle(null);
         syncDocumentTitle('terms');
-      } else if (path === '/editorial-standards' || hash === 'editorial-standards') {
+      } else if (normPath === '/editorial-standards' || hash === 'editorial-standards') {
         setActiveTab('editorial-standards');
+        setActiveArticle(null);
         syncDocumentTitle('editorial-standards');
-      } else if (path === '/editors' || hash === 'editors') {
+      } else if (normPath === '/editors' || hash === 'editors') {
         setActiveTab('editors');
+        setActiveArticle(null);
         syncDocumentTitle('editors');
-      } else if (path === '/feed' || hash === 'feed') {
+      } else if (normPath === '/feed' || hash === 'feed') {
         setActiveTab('feed');
+        setActiveArticle(null);
         syncDocumentTitle('feed');
       }
     };
@@ -258,7 +279,26 @@ export default function App() {
     setSelectedTag(null);
     setCurrentPage(1);
     setActiveTab('feed');
+    setActiveArticle(null);
     window.scrollTo({ top: 380, behavior: 'smooth' });
+
+    try {
+      if (cat === 'All') {
+        window.history.pushState({}, '', '/');
+        document.title = 'TechAPark | Engineering Journal - Published Daily';
+        let canonical = document.querySelector("link[rel='canonical']") as HTMLLinkElement | null;
+        if (canonical) canonical.setAttribute('href', 'https://techapark.com/');
+      } else {
+        const catObj = CATEGORIES_LIST.find(c => c.id === cat);
+        if (catObj) {
+          const targetUrl = `/category/${catObj.slug}/`;
+          window.history.pushState({ category: catObj.slug }, '', targetUrl);
+          document.title = `${catObj.shortTitle} | TechAPark Engineering Journal`;
+          let canonical = document.querySelector("link[rel='canonical']") as HTMLLinkElement | null;
+          if (canonical) canonical.setAttribute('href', `https://techapark.com${targetUrl}`);
+        }
+      }
+    } catch {}
   };
 
   const handleSelectTag = (tag: string) => {
