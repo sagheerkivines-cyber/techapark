@@ -127,18 +127,24 @@ export const InfographicViewer: React.FC<InfographicViewerProps> = ({
             src={imageUrl}
             alt={infographic.title}
             referrerPolicy="no-referrer"
+            loading="eager"
             onError={(e) => {
               const target = e.currentTarget;
-              const clean = imageUrl?.split('/').pop();
-              if (clean && !target.src.includes('/assets/images/')) {
+              const clean = imageUrl?.split('/').pop()?.split('?')[0].split('#')[0];
+              if (!clean) return;
+              
+              // Fallback chain: /assets/images/ -> /src/assets/images/
+              if (!target.src.includes('/assets/images/')) {
                 target.src = `/assets/images/${clean}`;
+              } else if (!target.src.includes('/src/assets/images/')) {
+                target.src = `/src/assets/images/${clean}`;
               }
             }}
-            className="w-full max-h-[650px] object-contain rounded-xl border border-[#5fdee7]/25 shadow-2xl transition-transform duration-500 group-hover:scale-[1.01]"
+            className="w-full max-h-[700px] object-contain rounded-xl border border-[#5fdee7]/25 shadow-2xl transition-transform duration-500 group-hover:scale-[1.008]"
           />
-          <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity bg-[#081c18]/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-[#5fdee7]/40 text-xs text-[#5fdee7] font-mono flex items-center gap-2">
-            <Maximize2 className="w-3.5 h-3.5" />
-            <span>High-Fidelity AI Infographic</span>
+          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 opacity-90 group-hover:opacity-100 transition-opacity bg-[#081c18]/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-[#5fdee7]/40 text-xs text-[#5fdee7] font-mono flex items-center gap-2 shadow-lg">
+            <Maximize2 className="w-3.5 h-3.5 text-[#10b981]" />
+            <span>High-Fidelity Official Infographic</span>
           </div>
         </div>
       ) : (

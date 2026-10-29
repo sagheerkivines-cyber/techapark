@@ -1,4 +1,4 @@
-// Direct bundled asset imports ensuring Vite serves all 20 images in both dev and prod
+// Direct bundled asset imports ensuring Vite serves all 23 images in both dev and prod
 import img1_1 from '../assets/images/data_privacy_infographic_1791555286138.jpg';
 import img1_2 from '../assets/images/cyber_security_tools_1791566201198.jpg';
 import img1_3 from '../assets/images/malware_protection_infographic_1791566216709.jpg';
@@ -26,6 +26,9 @@ import img5_1 from '../assets/images/windows_shortcuts_infographic_1791555335389
 import img5_2 from '../assets/images/battery_saving_infographic_1791566387279.jpg';
 import img5_3 from '../assets/images/fix_slow_laptop_infographic_1791566404832.jpg';
 import img5_4 from '../assets/images/tech_troubleshooting_infographic_1791566421177.jpg';
+
+export { ARTICLE_IMAGE_FILENAMES, getArticleImageFilename } from './articleImageMap';
+import { ARTICLE_IMAGE_FILENAMES } from './articleImageMap';
 
 export const ARTICLE_IMAGES: Record<string, string> = {
   'data-privacy-best-practices': img1_1,
@@ -56,3 +59,23 @@ export const ARTICLE_IMAGES: Record<string, string> = {
   'fix-slow-laptop-issues': img5_3,
   'common-tech-troubleshooting': img5_4
 };
+
+/**
+ * Returns a rock-solid, absolute root URL for the article image
+ * that resolves identically whether the user is on the root path,
+ * a deep article subpath (/articles/slug/), or opening in a new tab.
+ */
+export function getArticleImageUrl(articleIdOrSlug: string, fallbackUrl?: string): string {
+  const filename = ARTICLE_IMAGE_FILENAMES[articleIdOrSlug];
+  if (filename) {
+    return `/assets/images/${filename}`;
+  }
+  if (fallbackUrl) {
+    const clean = fallbackUrl.split('/').pop()?.split('?')[0].split('#')[0];
+    if (clean && clean.endsWith('.jpg')) {
+      return `/assets/images/${clean}`;
+    }
+    return fallbackUrl;
+  }
+  return '/assets/images/crossplay_games_infographic_1793168957348.jpg';
+}

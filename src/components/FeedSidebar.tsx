@@ -305,9 +305,12 @@ export const FeedSidebar: React.FC<FeedSidebarProps> = ({
                     referrerPolicy="no-referrer"
                     onError={(e) => {
                       const target = e.currentTarget;
-                      const clean = art.imageUrl?.split('/').pop();
-                      if (clean && !target.src.includes('/assets/images/')) {
+                      const clean = art.imageUrl?.split('/').pop()?.split('?')[0].split('#')[0];
+                      if (!clean) return;
+                      if (!target.src.includes('/assets/images/')) {
                         target.src = `/assets/images/${clean}`;
+                      } else if (!target.src.includes('/src/assets/images/')) {
+                        target.src = `/src/assets/images/${clean}`;
                       }
                     }}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

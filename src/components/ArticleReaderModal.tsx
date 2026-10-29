@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Article } from '../types/blog';
 import { InfographicViewer } from './InfographicViewer';
+import { getArticleImageUrl } from '../data/articleImages';
 import { 
   X, Bookmark, Share2, Volume2, VolumeX, Check, 
   ArrowLeft, Clock, Calendar, User, Eye, 
   CheckCircle2, Copy, BookOpen, Sparkles, ArrowRight,
-  Lock, ExternalLink, Globe
+  Lock, ExternalLink, Globe, Maximize2, ZoomIn, Download
 } from 'lucide-react';
 
 interface ArticleReaderModalProps {
@@ -31,6 +32,7 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
   const [copiedCodeIndex, setCopiedCodeIndex] = useState<number | null>(null);
   const [shareSuccess, setShareSuccess] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Reset scroll and audio on article change
@@ -60,6 +62,8 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
   }, [onClose]);
 
   if (!article) return null;
+
+  const primaryImageUrl = getArticleImageUrl(article.id, article.imageUrl);
 
   const handleCopyCode = (code: string, idx: number) => {
     navigator.clipboard.writeText(code);
@@ -323,10 +327,71 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
 
             </div>
 
+            {/* FEATURED VISUAL INFOGRAPHIC HERO BANNER */}
+            <div className="my-6 rounded-2xl overflow-hidden bg-[#071d18] border border-[#10b981]/40 shadow-[0_0_35px_rgba(16,185,129,0.18)]">
+              <div className="px-4 sm:px-6 py-3 bg-[#0a2721] border-b border-[#10b981]/30 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+                <div className="flex items-center gap-2 text-[#5fdee7]">
+                  <Sparkles className="w-4 h-4 text-[#10b981]" />
+                  <span className="font-bold tracking-wider uppercase text-[#10b981]">Featured Technical Infographic</span>
+                  <span className="text-slate-500 hidden sm:inline" aria-hidden="true">·</span>
+                  <span className="text-slate-300 hidden sm:inline font-sans font-medium">{article.infographic?.title || article.title}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsLightboxOpen(true)}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#061c16] hover:bg-[#10b981] text-[#a7f3d0] hover:text-[#041a15] border border-[#10b981]/40 transition-all font-semibold"
+                    title="Zoom in full-screen"
+                  >
+                    <ZoomIn className="w-3.5 h-3.5" />
+                    <span>Zoom High-Res</span>
+                  </button>
+                  <a
+                    href={primaryImageUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#061c16] hover:bg-[#0e3b31] text-slate-300 hover:text-[#5fdee7] border border-[#5fdee7]/30 transition-all"
+                    title="Open raw image file in new tab"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5 text-[#5fdee7]" />
+                    <span className="hidden sm:inline">Image File</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Clickable Image Container */}
+              <div 
+                onClick={() => setIsLightboxOpen(true)}
+                className="relative cursor-zoom-in group bg-[#041512] flex items-center justify-center p-2 sm:p-4 overflow-hidden"
+              >
+                <img
+                  src={primaryImageUrl}
+                  alt={article.infographic?.title || article.title}
+                  loading="eager"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    const clean = primaryImageUrl.split('/').pop()?.split('?')[0].split('#')[0];
+                    if (!clean) return;
+                    if (!target.src.includes('/assets/images/')) {
+                      target.src = `/assets/images/${clean}`;
+                    } else if (!target.src.includes('/src/assets/images/')) {
+                      target.src = `/src/assets/images/${clean}`;
+                    }
+                  }}
+                  className="w-full max-h-[600px] object-contain rounded-xl border border-[#10b981]/25 shadow-2xl transition-transform duration-300 group-hover:scale-[1.01]"
+                />
+                <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#041512]/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-[#10b981]/50 text-xs font-mono text-[#a7f3d0] opacity-80 group-hover:opacity-100 transition-opacity flex items-center gap-2 shadow-lg">
+                  <Maximize2 className="w-3.5 h-3.5 text-[#10b981]" />
+                  <span>Click to Expand</span>
+                </div>
+              </div>
+            </div>
+
             {/* MANDATORY INFOGRAPHIC SECTION (Reference Design Standard) */}
             <InfographicViewer
               infographic={article.infographic}
-              imageUrl={article.imageUrl}
+              imageUrl={primaryImageUrl}
               articleTitle={article.title}
             />
 
@@ -520,6 +585,59 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
         </div>
 
       </div>
+
+      {/* High-Resolution Infographic Lightbox Modal */}
+      {isLightboxOpen && (
+        <div 
+          onClick={() => setIsLightboxOpen(false)}
+          className="fixed inset-0 z-[60] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-3 sm:p-6 cursor-zoom-out animate-fadeIn"
+        >
+          <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-3 z-10">
+            <a
+              href={primaryImageUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="p-2.5 rounded-xl bg-[#081c18] border border-[#10b981]/50 text-[#a7f3d0] hover:bg-[#10b981] hover:text-[#041a15] transition-all flex items-center gap-2 text-xs font-mono font-bold"
+              title="Open raw image file in new browser window"
+            >
+              <ExternalLink className="w-4 h-4" />
+              <span className="hidden sm:inline">Open Raw Image</span>
+            </a>
+            <button
+              type="button"
+              onClick={() => setIsLightboxOpen(false)}
+              className="p-2.5 rounded-xl bg-[#081c18] border border-rose-500/50 text-rose-300 hover:bg-rose-500 hover:text-white transition-all shadow-xl"
+              title="Close image zoom"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div 
+            onClick={(e) => e.stopPropagation()} 
+            className="relative max-w-6xl max-h-[90vh] overflow-auto rounded-xl border border-[#10b981]/40 bg-[#041512] shadow-2xl p-2 cursor-default flex items-center justify-center"
+          >
+            <img
+              src={primaryImageUrl}
+              alt={article.title}
+              className="max-h-[85vh] w-auto object-contain rounded-lg shadow-2xl"
+              onError={(e) => {
+                const target = e.currentTarget;
+                const clean = primaryImageUrl.split('/').pop()?.split('?')[0].split('#')[0];
+                if (!clean) return;
+                if (!target.src.includes('/assets/images/')) {
+                  target.src = `/assets/images/${clean}`;
+                }
+              }}
+            />
+          </div>
+          <div className="mt-3 text-xs font-mono text-slate-400">
+            Click anywhere outside or press Esc to close · High-Resolution AI Architectural Infographic
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

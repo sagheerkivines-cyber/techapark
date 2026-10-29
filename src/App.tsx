@@ -155,25 +155,30 @@ export default function App() {
       const searchParams = new URLSearchParams(window.location.search);
       const hash = window.location.hash.replace(/^#\/?/, '');
 
-      // 1. Article direct link: /articles/:slug, /articles/:slug/, /articles/:slug/index.html, ?article=:slug, ?p=/articles/:slug
-      let targetSlug = searchParams.get('article');
+      // 1. Article direct link: /articles/:slug, /articles/:slug/, /articles/:slug/index.html, ?article=:slug, ?slug=:slug, ?p=/articles/:slug
+      let targetSlug = searchParams.get('article') || searchParams.get('slug') || searchParams.get('id');
       if (!targetSlug && searchParams.get('p')) {
         const pVal = searchParams.get('p') || '';
-        const match = pVal.match(/\/articles\/([^/?#]+)/);
+        const match = pVal.match(/\/(?:articles|article)\/([^/?#]+)/);
         if (match) targetSlug = match[1];
       }
-      if (!targetSlug && path.startsWith('/articles/')) {
+      if (!targetSlug && (path.startsWith('/articles/') || path.startsWith('/article/'))) {
         targetSlug = path
-          .replace(/^\/articles\//, '')
+          .replace(/^\/(?:articles|article)\//, '')
           .replace(/\/index\.html$/i, '')
           .replace(/\/$/, '');
-      } else if (!targetSlug && (hash.includes('articles/'))) {
-        const match = hash.match(/articles\/([^/?#]+)/);
+      } else if (!targetSlug && (hash.includes('articles/') || hash.includes('article/'))) {
+        const match = hash.match(/(?:articles|article)\/([^/?#]+)/);
         if (match) targetSlug = match[1];
       }
 
       if (targetSlug) {
-        const found = getArticleBySlug(targetSlug);
+        const cleanSlug = decodeURIComponent(targetSlug).toLowerCase().trim();
+        const found = getArticleBySlug(cleanSlug) || ALL_ARTICLES.find(a => 
+          a.slug.toLowerCase() === cleanSlug || 
+          a.id.toLowerCase() === cleanSlug ||
+          cleanSlug.includes(a.slug.toLowerCase())
+        );
         if (found) {
           setActiveArticle(found);
           document.title = `${found.title} | TechAPark Engineering Journal`;

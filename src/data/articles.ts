@@ -4,7 +4,7 @@ import { CATEGORY_2_ARTICLES } from './articles/category2';
 import { CATEGORY_3_ARTICLES } from './articles/category3';
 import { CATEGORY_4_ARTICLES } from './articles/category4';
 import { CATEGORY_5_ARTICLES } from './articles/category5';
-import { ARTICLE_IMAGES } from './articleImages';
+import { ARTICLE_IMAGES, getArticleImageUrl } from './articleImages';
 
 // Assemble raw articles and ensure every single article is assigned its unique generated infographic image
 const RAW_ARTICLES: Article[] = [
@@ -17,7 +17,7 @@ const RAW_ARTICLES: Article[] = [
 
 export const ALL_ARTICLES: Article[] = RAW_ARTICLES.map(article => ({
   ...article,
-  imageUrl: ARTICLE_IMAGES[article.id] || article.imageUrl
+  imageUrl: getArticleImageUrl(article.id, ARTICLE_IMAGES[article.id] || article.imageUrl)
 }));
 
 export const FEATURED_ARTICLES: Article[] = ALL_ARTICLES.filter(a => a.featured);

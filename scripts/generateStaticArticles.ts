@@ -6,6 +6,7 @@ import { CATEGORY_2_ARTICLES } from '../src/data/articles/category2';
 import { CATEGORY_3_ARTICLES } from '../src/data/articles/category3';
 import { CATEGORY_4_ARTICLES } from '../src/data/articles/category4';
 import { CATEGORY_5_ARTICLES } from '../src/data/articles/category5';
+import { ARTICLE_IMAGE_FILENAMES } from '../src/data/articleImageMap';
 
 const ALL_ARTICLES = [
   ...CATEGORY_1_ARTICLES,
@@ -87,9 +88,11 @@ for (const article of ALL_ARTICLES) {
     </section>
   ` : '';
 
-  const imageFileName = article.imageUrl ? path.basename(article.imageUrl) : '';
-  const publicImageUrl = imageFileName ? `/assets/images/${imageFileName}` : '';
-  const fullAbsoluteImageUrl = imageFileName ? `https://techapark.com/assets/images/${imageFileName}` : '';
+  const mappedFileName = ARTICLE_IMAGE_FILENAMES[article.id] || (article.imageUrl ? path.basename(article.imageUrl.split('?')[0]) : '');
+  const imageFileName = mappedFileName || 'crossplay_games_infographic_1793168957348.jpg';
+  const publicImageUrl = `/assets/images/${imageFileName}`;
+  const fullAbsoluteImageUrl = `https://techapark.com/assets/images/${imageFileName}`;
+  const canonicalUrl = `https://techapark.com/articles/${article.slug}/`;
 
   // Structured Data Schema (JSON-LD) for Google Search Console
   const structuredData = {
@@ -98,7 +101,7 @@ for (const article of ALL_ARTICLES) {
     "headline": article.title,
     "alternativeHeadline": article.subtitle,
     "description": article.summary,
-    "image": fullAbsoluteImageUrl || undefined,
+    "image": fullAbsoluteImageUrl,
     "author": {
       "@type": "Person",
       "name": article.author.name,
@@ -117,10 +120,10 @@ for (const article of ALL_ARTICLES) {
       }
     },
     "datePublished": "2026-10-27T08:00:00+00:00",
-    "dateModified": "2026-10-28T08:00:00+00:00",
+    "dateModified": "2026-10-29T08:00:00+00:00",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://techapark.com/articles/${article.slug}`
+      "@id": canonicalUrl
     },
     "keywords": article.tags.join(', '),
     "wordCount": article.wordCount,
@@ -135,16 +138,19 @@ for (const article of ALL_ARTICLES) {
     <title>${escapeHtml(article.title)} | TechAPark Engineering Journal</title>
     <meta name="description" content="${escapeHtml(article.summary)}" />
     <meta name="keywords" content="${escapeHtml(article.tags.join(', '))}" />
-    <link rel="canonical" href="https://techapark.com/articles/${article.slug}" />
+    <link rel="canonical" href="${canonicalUrl}" />
 
     <!-- OpenGraph / Facebook -->
     <meta property="og:title" content="${escapeHtml(article.title)} | TechAPark" />
     <meta property="og:description" content="${escapeHtml(article.summary)}" />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://techapark.com/articles/${article.slug}" />
+    <meta property="og:url" content="${canonicalUrl}" />
     <meta property="og:site_name" content="TechAPark" />
-    ${fullAbsoluteImageUrl ? `<meta property="og:image" content="${fullAbsoluteImageUrl}" />` : ''}
+    <meta property="og:image" content="${fullAbsoluteImageUrl}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="675" />
     <meta property="article:published_time" content="2026-10-27T08:00:00+00:00" />
+    <meta property="article:modified_time" content="2026-10-29T08:00:00+00:00" />
     <meta property="article:author" content="${escapeHtml(article.author.name)}" />
     <meta property="article:section" content="${escapeHtml(article.category)}" />
 
@@ -152,7 +158,7 @@ for (const article of ALL_ARTICLES) {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escapeHtml(article.title)}" />
     <meta name="twitter:description" content="${escapeHtml(article.summary)}" />
-    ${fullAbsoluteImageUrl ? `<meta name="twitter:image" content="${fullAbsoluteImageUrl}" />` : ''}
+    <meta name="twitter:image" content="${fullAbsoluteImageUrl}" />
 
     <meta name="theme-color" content="#081c18" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -235,21 +241,19 @@ ${JSON.stringify(structuredData, null, 2)}
           </div>
         </div>
 
-        ${imageFileName ? `
-          <div style="margin-bottom: 2.5rem; border-radius: 1rem; overflow: hidden; border: 1px solid rgba(16,185,129,0.35); background: #041a15; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <img 
-              src="${publicImageUrl}" 
-              onerror="if(this.src.indexOf('../../')===-1){this.src='../../assets/images/${imageFileName}';}" 
-              alt="${escapeHtml(article.title)}" 
-              style="width: 100%; max-height: 650px; object-fit: contain; display: block; margin: 0 auto; background: #020c0a;" 
-              loading="eager"
-            />
-            <div style="padding: 0.6rem 1rem; background: #061e18; border-top: 1px solid rgba(16,185,129,0.2); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #5fdee7; display: flex; justify-content: space-between; align-items: center;">
-              <span>Infographic Schematic · ${escapeHtml(article.infographic?.title || article.title)}</span>
-              <span style="color: #34d399; font-weight: 600;">● High-Res Infographic</span>
-            </div>
+        <div style="margin-bottom: 2.5rem; border-radius: 1rem; overflow: hidden; border: 1px solid rgba(16,185,129,0.35); background: #041a15; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          <img 
+            src="${publicImageUrl}" 
+            onerror="if(this.src.indexOf('../../')===-1){this.src='../../assets/images/${imageFileName}';}else if(this.src.indexOf('/src/')===-1){this.src='/src/assets/images/${imageFileName}';}" 
+            alt="${escapeHtml(article.title)}" 
+            style="width: 100%; max-height: 650px; object-fit: contain; display: block; margin: 0 auto; background: #020c0a;" 
+            loading="eager"
+          />
+          <div style="padding: 0.6rem 1rem; background: #061e18; border-top: 1px solid rgba(16,185,129,0.2); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #5fdee7; display: flex; justify-content: space-between; align-items: center;">
+            <span>Infographic Schematic · ${escapeHtml(article.infographic?.title || article.title)}</span>
+            <span style="color: #34d399; font-weight: 600;">● High-Res Infographic</span>
           </div>
-        ` : ''}
+        </div>
 
         <div class="article-body">
           ${takeawaysHtml}
@@ -269,6 +273,80 @@ ${JSON.stringify(structuredData, null, 2)}
 
 console.log(`Successfully generated static HTML pages for all ${ALL_ARTICLES.length} articles in /public/articles/[slug]/index.html`);
 
+// ==========================================
+// Generate Complete, Google-Validated sitemap.xml
+// ==========================================
+console.log('Generating updated sitemap.xml with 23 articles and image tags...');
+
+const SITEMAP_STATIC_PAGES = [
+  { url: 'https://techapark.com/', priority: '1.0', changefreq: 'daily' },
+  { url: 'https://techapark.com/feed', priority: '0.9', changefreq: 'daily' },
+  { url: 'https://techapark.com/about', priority: '0.85', changefreq: 'weekly' },
+  { url: 'https://techapark.com/editors', priority: '0.80', changefreq: 'weekly' },
+  { url: 'https://techapark.com/contact', priority: '0.85', changefreq: 'weekly' },
+  { url: 'https://techapark.com/privacy', priority: '0.80', changefreq: 'monthly' },
+  { url: 'https://techapark.com/terms', priority: '0.80', changefreq: 'monthly' },
+  { url: 'https://techapark.com/editorial-standards', priority: '0.85', changefreq: 'weekly' }
+];
+
+const SITEMAP_CATEGORIES = [
+  { url: 'https://techapark.com/category/cyber-security-privacy', priority: '0.85' },
+  { url: 'https://techapark.com/category/cloud-computing-hosting', priority: '0.85' },
+  { url: 'https://techapark.com/category/freelancing-remote-work', priority: '0.85' },
+  { url: 'https://techapark.com/category/gaming-tech-culture', priority: '0.85' },
+  { url: 'https://techapark.com/category/hardware-troubleshooting', priority: '0.85' }
+];
+
+let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- Core Pages -->
+${SITEMAP_STATIC_PAGES.map(p => `  <url>
+    <loc>${p.url}</loc>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>${p.changefreq}</changefreq>
+    <priority>${p.priority}</priority>
+  </url>`).join('\n\n')}
+
+  <!-- Category Hubs -->
+${SITEMAP_CATEGORIES.map(c => `  <url>
+    <loc>${c.url}</loc>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>${c.priority}</priority>
+  </url>`).join('\n\n')}
+
+  <!-- 23 Individual Technical Articles with Google Image Sitemaps -->
+${ALL_ARTICLES.map(art => {
+  const mappedFileName = ARTICLE_IMAGE_FILENAMES[art.id] || (art.imageUrl ? path.basename(art.imageUrl.split('?')[0]) : '');
+  const imageFileName = mappedFileName || 'crossplay_games_infographic_1793168957348.jpg';
+  const imgLoc = `https://techapark.com/assets/images/${imageFileName}`;
+  const title = escapeXml(art.title);
+  const caption = escapeXml(art.infographic?.title || art.subtitle || art.title);
+
+  return `  <url>
+    <loc>https://techapark.com/articles/${art.slug}/</loc>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>${imgLoc}</image:loc>
+      <image:title>${title}</image:title>
+      <image:caption>${caption}</image:caption>
+    </image:image>
+  </url>`;
+}).join('\n\n')}
+
+</urlset>
+`;
+
+fs.writeFileSync(path.resolve(publicDir, 'sitemap.xml'), sitemapXml.trim(), 'utf-8');
+console.log('Successfully wrote updated /public/sitemap.xml!');
+
 function escapeHtml(str: string): string {
   if (!str) return '';
   return str
@@ -277,4 +355,14 @@ function escapeHtml(str: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+function escapeXml(str: string): string {
+  if (!str) return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
 }
