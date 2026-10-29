@@ -87,6 +87,10 @@ for (const article of ALL_ARTICLES) {
     </section>
   ` : '';
 
+  const imageFileName = article.imageUrl ? path.basename(article.imageUrl) : '';
+  const publicImageUrl = imageFileName ? `/assets/images/${imageFileName}` : '';
+  const fullAbsoluteImageUrl = imageFileName ? `https://techapark.com/assets/images/${imageFileName}` : '';
+
   // Structured Data Schema (JSON-LD) for Google Search Console
   const structuredData = {
     "@context": "https://schema.org",
@@ -94,7 +98,7 @@ for (const article of ALL_ARTICLES) {
     "headline": article.title,
     "alternativeHeadline": article.subtitle,
     "description": article.summary,
-    "image": article.imageUrl ? `https://techapark.com${article.imageUrl.startsWith('/') ? '' : '/'}${article.imageUrl}` : undefined,
+    "image": fullAbsoluteImageUrl || undefined,
     "author": {
       "@type": "Person",
       "name": article.author.name,
@@ -139,7 +143,7 @@ for (const article of ALL_ARTICLES) {
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://techapark.com/articles/${article.slug}" />
     <meta property="og:site_name" content="TechAPark" />
-    ${article.imageUrl ? `<meta property="og:image" content="${article.imageUrl}" />` : ''}
+    ${fullAbsoluteImageUrl ? `<meta property="og:image" content="${fullAbsoluteImageUrl}" />` : ''}
     <meta property="article:published_time" content="2026-10-27T08:00:00+00:00" />
     <meta property="article:author" content="${escapeHtml(article.author.name)}" />
     <meta property="article:section" content="${escapeHtml(article.category)}" />
@@ -148,7 +152,7 @@ for (const article of ALL_ARTICLES) {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escapeHtml(article.title)}" />
     <meta name="twitter:description" content="${escapeHtml(article.summary)}" />
-    ${article.imageUrl ? `<meta name="twitter:image" content="${article.imageUrl}" />` : ''}
+    ${fullAbsoluteImageUrl ? `<meta name="twitter:image" content="${fullAbsoluteImageUrl}" />` : ''}
 
     <meta name="theme-color" content="#081c18" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -231,9 +235,19 @@ ${JSON.stringify(structuredData, null, 2)}
           </div>
         </div>
 
-        ${article.imageUrl ? `
-          <div style="margin-bottom: 2.5rem; border-radius: 1rem; overflow: hidden; border: 1px solid rgba(16,185,129,0.3);">
-            <img src="${article.imageUrl}" alt="${escapeHtml(article.title)}" style="width: 100%; height: auto; display: block;" />
+        ${imageFileName ? `
+          <div style="margin-bottom: 2.5rem; border-radius: 1rem; overflow: hidden; border: 1px solid rgba(16,185,129,0.35); background: #041a15; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <img 
+              src="${publicImageUrl}" 
+              onerror="if(this.src.indexOf('../../')===-1){this.src='../../assets/images/${imageFileName}';}" 
+              alt="${escapeHtml(article.title)}" 
+              style="width: 100%; max-height: 650px; object-fit: contain; display: block; margin: 0 auto; background: #020c0a;" 
+              loading="eager"
+            />
+            <div style="padding: 0.6rem 1rem; background: #061e18; border-top: 1px solid rgba(16,185,129,0.2); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #5fdee7; display: flex; justify-content: space-between; align-items: center;">
+              <span>Infographic Schematic · ${escapeHtml(article.infographic?.title || article.title)}</span>
+              <span style="color: #34d399; font-weight: 600;">● High-Res Infographic</span>
+            </div>
           </div>
         ` : ''}
 

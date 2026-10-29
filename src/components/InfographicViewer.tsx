@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { InfographicData } from '../types/blog';
 import { 
   Shield, Smartphone, RefreshCw, Key, EyeOff, AlertTriangle,
@@ -64,6 +64,12 @@ export const InfographicViewer: React.FC<InfographicViewerProps> = ({
   );
   const [copiedPanelId, setCopiedPanelId] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (imageUrl) {
+      setViewMode('graphic');
+    }
+  }, [imageUrl]);
+
   const handleCopyPanel = (id: string, text: string) => {
     navigator.clipboard.writeText(text);
     setCopiedPanelId(id);
@@ -121,6 +127,13 @@ export const InfographicViewer: React.FC<InfographicViewerProps> = ({
             src={imageUrl}
             alt={infographic.title}
             referrerPolicy="no-referrer"
+            onError={(e) => {
+              const target = e.currentTarget;
+              const clean = imageUrl?.split('/').pop();
+              if (clean && !target.src.includes('/assets/images/')) {
+                target.src = `/assets/images/${clean}`;
+              }
+            }}
             className="w-full max-h-[650px] object-contain rounded-xl border border-[#5fdee7]/25 shadow-2xl transition-transform duration-500 group-hover:scale-[1.01]"
           />
           <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity bg-[#081c18]/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-[#5fdee7]/40 text-xs text-[#5fdee7] font-mono flex items-center gap-2">

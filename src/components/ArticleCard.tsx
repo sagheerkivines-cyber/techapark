@@ -47,6 +47,13 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             src={article.imageUrl}
             alt={article.title}
             referrerPolicy="no-referrer"
+            onError={(e) => {
+              const target = e.currentTarget;
+              const clean = article.imageUrl?.split('/').pop();
+              if (clean && !target.src.includes('/assets/images/')) {
+                target.src = `/assets/images/${clean}`;
+              }
+            }}
             className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
           />
         ) : (
